@@ -212,7 +212,6 @@
 <!-- TopAppBar -->
 <header class="w-full top-0 sticky bg-background dark:bg-background h-16 flex items-center justify-between px-margin-mobile z-40">
 <div class="flex items-center gap-4">
-<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim cursor-pointer active:scale-95 transition-transform" data-icon="menu">menu</span>
 <span class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Neev FLN Assessor</span>
 </div>
 </header>
@@ -296,12 +295,10 @@
 </div>
 <!-- PIN Entry Dots -->
 <div class="flex items-center justify-center gap-lg my-lg">
-<!-- Active Dot -->
-<div class="w-4 h-4 rounded-full bg-primary border-2 border-primary"></div>
-<!-- Inactive Dots -->
-<div class="w-4 h-4 rounded-full border-2 border-outline-variant bg-surface"></div>
-<div class="w-4 h-4 rounded-full border-2 border-outline-variant bg-surface"></div>
-<div class="w-4 h-4 rounded-full border-2 border-outline-variant bg-surface"></div>
+<div class="pin-dot w-4 h-4 rounded-full border-2 border-outline-variant bg-surface"></div>
+<div class="pin-dot w-4 h-4 rounded-full border-2 border-outline-variant bg-surface"></div>
+<div class="pin-dot w-4 h-4 rounded-full border-2 border-outline-variant bg-surface"></div>
+<div class="pin-dot w-4 h-4 rounded-full border-2 border-outline-variant bg-surface"></div>
 </div>
 </main>
 <!-- Numeric Keypad -->
@@ -336,16 +333,14 @@
 <div id="view-neev_fln_dashboard" class="view-section flex-col h-full">
 
 <!-- TopAppBar -->
-<header class="bg-surface dark:bg-surface-dim text-primary dark:text-primary-fixed-dim font-title-lg text-title-lg-mobile md:font-title-lg md:text-title-lg w-full sticky top-0 z-50 border-b border-outline-variant flat no shadows flex items-center justify-between px-margin-mobile h-16 w-full hover:bg-surface-container-highest transition-colors active:scale-95 transition-transform">
-<div class="flex items-center gap-md">
-<button class="p-2 rounded-full hover:bg-surface-variant flex items-center justify-center transition-colors">
-<span class="material-symbols-outlined" data-icon="menu">menu</span>
-</button>
-<h1 class="font-title-lg text-title-lg text-primary font-bold">Neev FLN Assessor</h1>
-</div>
-<button class="p-2 rounded-full hover:bg-surface-variant flex items-center justify-center transition-colors">
-<span class="material-symbols-outlined" data-icon="sync">sync</span>
-</button>
+<header class="w-full top-0 sticky bg-primary dark:bg-primary h-16 flex items-center justify-between px-margin-mobile z-50 text-on-primary shadow-sm">
+    <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined cursor-pointer active:scale-95 transition-transform" onclick="logout()" data-icon="logout">logout</span>
+        <span class="font-title-lg text-title-lg font-bold tracking-tight">Neev FLN Assessor</span>
+    </div>
+    <button class="p-2 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors">
+        <span class="material-symbols-outlined" data-icon="sync">sync</span>
+    </button>
 </header>
 <!-- Status Bar -->
 <div class="bg-surface-container-low px-margin-mobile py-sm flex justify-between items-center text-label-md font-label-md text-on-surface-variant border-b border-surface-container">
@@ -976,6 +971,89 @@
             });
         });
     </script>
+
+</div>
+
+<!-- VIEW: neev_fln_school_admin_dashboard -->
+<div id="view-neev_fln_school_admin_dashboard" class="view-section flex-col h-full">
+
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-primary dark:bg-primary h-16 flex items-center justify-between px-margin-mobile z-40 text-on-primary">
+    <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined cursor-pointer active:scale-95 transition-transform" onclick="logout()" data-icon="logout">logout</span>
+        <span class="font-title-lg text-title-lg font-bold tracking-tight">School Admin Dashboard</span>
+    </div>
+</header>
+<main class="flex-1 overflow-y-auto px-margin-mobile py-md flex flex-col gap-md">
+    <!-- School Health Matrix -->
+    <section class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
+        <h2 class="font-title-md text-title-md text-primary mb-sm">School FLN Health</h2>
+        <div class="flex gap-4 items-end">
+            <div class="flex-1 bg-[#d4edda] p-sm rounded-lg text-center">
+                <p class="font-title-lg text-title-lg text-[#155724]">65%</p>
+                <p class="text-xs text-[#155724]">On Track</p>
+            </div>
+            <div class="flex-1 bg-error-container p-sm rounded-lg text-center bg-opacity-30 border border-error">
+                <p class="font-title-lg text-title-lg text-error">35%</p>
+                <p class="text-xs text-error">Needs Help</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Assessor Activity Feed -->
+    <section class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
+        <h2 class="font-title-md text-title-md text-primary mb-sm">Teacher Activity (Today)</h2>
+        <ul class="flex flex-col gap-2">
+            <li class="flex justify-between items-center py-2 border-b border-surface-container">
+                <span class="font-label-lg">Neha Patel</span>
+                <span class="text-sm text-on-surface-variant">15 assessments</span>
+            </li>
+            <li class="flex justify-between items-center py-2 border-b border-surface-container">
+                <span class="font-label-lg">Rohan Sharma</span>
+                <span class="text-sm text-error">0 assessments</span>
+            </li>
+        </ul>
+        <button class="mt-sm w-full py-2 bg-primary-container text-on-primary-container rounded-full font-label-lg shadow-sm">Manage Teachers</button>
+    </section>
+</main>
+
+</div>
+
+<!-- VIEW: neev_fln_super_admin_dashboard -->
+<div id="view-neev_fln_super_admin_dashboard" class="view-section flex-col h-full">
+
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-tertiary dark:bg-tertiary h-16 flex items-center justify-between px-margin-mobile z-40 text-on-tertiary">
+    <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined cursor-pointer active:scale-95 transition-transform" onclick="logout()" data-icon="logout">logout</span>
+        <span class="font-title-lg text-title-lg font-bold tracking-tight">State Admin Portal</span>
+    </div>
+</header>
+<main class="flex-1 overflow-y-auto px-margin-mobile py-md flex flex-col gap-md">
+    <!-- District Heatmap -->
+    <section class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
+        <h2 class="font-title-md text-title-md text-tertiary mb-sm">District FLN Heatmap</h2>
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between p-2 bg-[#d4edda] rounded">
+                <span class="font-label-lg">Kanpur</span> <span class="text-sm font-bold text-[#155724]">72% Pass</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-[#fff3cd] rounded">
+                <span class="font-label-lg">Lucknow</span> <span class="text-sm font-bold text-[#856404]">55% Pass</span>
+            </div>
+            <div class="flex items-center justify-between p-2 bg-error-container bg-opacity-30 border border-error rounded">
+                <span class="font-label-lg">Varanasi</span> <span class="text-sm font-bold text-error">32% Pass</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bulk Import -->
+    <section class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm text-center flex flex-col items-center">
+        <span class="material-symbols-outlined text-4xl text-tertiary mb-2">upload_file</span>
+        <h2 class="font-title-md text-title-md text-on-surface mb-xs">Bulk Roster Import</h2>
+        <p class="text-sm text-on-surface-variant mb-md">Upload state-wide student rosters via CSV.</p>
+        <button class="w-full py-2 bg-tertiary text-on-tertiary rounded-full font-label-lg shadow-md max-w-[200px]">Select CSV File</button>
+    </section>
+</main>
 
 </div>
 

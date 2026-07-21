@@ -230,16 +230,14 @@
   </head>
 <body class="bg-surface text-on-surface font-sans antialiased min-h-screen flex flex-col pb-24">
 <!-- TopAppBar -->
-<header class="bg-surface dark:bg-surface-dim text-primary dark:text-primary-fixed-dim font-title-lg text-title-lg-mobile md:font-title-lg md:text-title-lg w-full sticky top-0 z-50 border-b border-outline-variant flat no shadows flex items-center justify-between px-margin-mobile h-16 w-full hover:bg-surface-container-highest transition-colors active:scale-95 transition-transform">
-<div class="flex items-center gap-md">
-<button class="p-2 rounded-full hover:bg-surface-variant flex items-center justify-center transition-colors">
-<span class="material-symbols-outlined" data-icon="menu">menu</span>
-</button>
-<h1 class="font-title-lg text-title-lg text-primary font-bold">Neev FLN Assessor</h1>
-</div>
-<button class="p-2 rounded-full hover:bg-surface-variant flex items-center justify-center transition-colors">
-<span class="material-symbols-outlined" data-icon="sync">sync</span>
-</button>
+<header class="w-full top-0 sticky bg-primary dark:bg-primary h-16 flex items-center justify-between px-margin-mobile z-50 text-on-primary shadow-sm">
+    <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined cursor-pointer active:scale-95 transition-transform" onclick="logout()" data-icon="logout">logout</span>
+        <span class="font-title-lg text-title-lg font-bold tracking-tight">Neev FLN Assessor</span>
+    </div>
+    <button class="p-2 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors">
+        <span class="material-symbols-outlined" data-icon="sync">sync</span>
+    </button>
 </header>
 <!-- Status Bar -->
 <div class="bg-surface-container-low px-margin-mobile py-sm flex justify-between items-center text-label-md font-label-md text-on-surface-variant border-b border-surface-container">

@@ -12,6 +12,11 @@ let activeSessionKey = null; // Volatile memory storage for derived AES key
 // --- Cryptography & Security Helpers (DPDP Compliance) ---
 
 export const CryptoHelper = {
+    // Sets the active session key securely in module closure
+    setActiveSessionKey: function(key) {
+        activeSessionKey = key;
+    },
+
     // Generates a cryptographically secure random salt
     generateSalt: function(length = 16) {
         const array = new Uint8Array(length);

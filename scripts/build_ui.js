@@ -12,7 +12,9 @@ const views = [
   'neev_fln_assessment_results',
   'neev_fln_admin_assessors',
   'neev_fln_register_new_school',
-  'neev_fln_register_student'
+  'neev_fln_register_student',
+  'neev_fln_school_admin_dashboard',
+  'neev_fln_super_admin_dashboard'
 ];
 
 let mainHtml = `<!DOCTYPE html>

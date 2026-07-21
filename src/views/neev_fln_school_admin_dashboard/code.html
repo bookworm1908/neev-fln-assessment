@@ -1,0 +1,41 @@
+<body class="h-full flex flex-col font-body-md text-on-background bg-background text-body-md">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-primary dark:bg-primary h-16 flex items-center justify-between px-margin-mobile z-40 text-on-primary">
+    <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined cursor-pointer active:scale-95 transition-transform" onclick="logout()" data-icon="logout">logout</span>
+        <span class="font-title-lg text-title-lg font-bold tracking-tight">School Admin Dashboard</span>
+    </div>
+</header>
+<main class="flex-1 overflow-y-auto px-margin-mobile py-md flex flex-col gap-md">
+    <!-- School Health Matrix -->
+    <section class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
+        <h2 class="font-title-md text-title-md text-primary mb-sm">School FLN Health</h2>
+        <div class="flex gap-4 items-end">
+            <div class="flex-1 bg-[#d4edda] p-sm rounded-lg text-center">
+                <p class="font-title-lg text-title-lg text-[#155724]">65%</p>
+                <p class="text-xs text-[#155724]">On Track</p>
+            </div>
+            <div class="flex-1 bg-error-container p-sm rounded-lg text-center bg-opacity-30 border border-error">
+                <p class="font-title-lg text-title-lg text-error">35%</p>
+                <p class="text-xs text-error">Needs Help</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Assessor Activity Feed -->
+    <section class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
+        <h2 class="font-title-md text-title-md text-primary mb-sm">Teacher Activity (Today)</h2>
+        <ul class="flex flex-col gap-2">
+            <li class="flex justify-between items-center py-2 border-b border-surface-container">
+                <span class="font-label-lg">Neha Patel</span>
+                <span class="text-sm text-on-surface-variant">15 assessments</span>
+            </li>
+            <li class="flex justify-between items-center py-2 border-b border-surface-container">
+                <span class="font-label-lg">Rohan Sharma</span>
+                <span class="text-sm text-error">0 assessments</span>
+            </li>
+        </ul>
+        <button class="mt-sm w-full py-2 bg-primary-container text-on-primary-container rounded-full font-label-lg shadow-sm">Manage Teachers</button>
+    </section>
+</main>
+</body>

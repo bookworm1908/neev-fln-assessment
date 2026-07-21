@@ -5,20 +5,36 @@
 import { DB } from './db.js';
 
 export const SyncEngine = {
-    // Converts our standard flat JSON into Firestore REST Document format
     toFirestoreRestFormat: function(payload) {
-        const fields = {};
-        for (const [key, value] of Object.entries(payload)) {
+        const processValue = (value) => {
             if (typeof value === "string") {
-                fields[key] = { stringValue: value };
+                return { stringValue: value };
             } else if (typeof value === "number") {
                 if (value % 1 === 0) {
-                    fields[key] = { integerValue: value.toString() };
+                    return { integerValue: value.toString() };
                 } else {
-                    fields[key] = { doubleValue: value };
+                    return { doubleValue: value };
                 }
             } else if (typeof value === "boolean") {
-                fields[key] = { booleanValue: value };
+                return { booleanValue: value };
+            } else if (Array.isArray(value)) {
+                return { arrayValue: { values: value.map(processValue).filter(v => v !== null) } };
+            } else if (typeof value === "object" && value !== null) {
+                const mapFields = {};
+                for (const [k, v] of Object.entries(value)) {
+                    const processed = processValue(v);
+                    if (processed) mapFields[k] = processed;
+                }
+                return { mapValue: { fields: mapFields } };
+            }
+            return null;
+        };
+
+        const fields = {};
+        for (const [key, value] of Object.entries(payload)) {
+            const processed = processValue(value);
+            if (processed) {
+                fields[key] = processed;
             }
         }
         return { fields };

@@ -93,10 +93,24 @@ const views = [
   'view-neev_fln_assessment_results',
   'view-neev_fln_admin_assessors',
   'view-neev_fln_register_new_school',
-  'view-neev_fln_register_student'
+  'view-neev_fln_register_student',
+  'view-neev_fln_school_admin_dashboard',
+  'view-neev_fln_super_admin_dashboard'
 ];
 
-function showView(viewId) {
+function showView(viewId, pushToHistory = true) {
+    function updatePinDots() {
+        const dots = document.querySelectorAll('.pin-dot');
+        dots.forEach((dot, index) => {
+            if (index < enteredPin.length) {
+                dot.classList.add('bg-primary', 'border-primary');
+                dot.classList.remove('bg-surface', 'border-outline-variant');
+            } else {
+                dot.classList.remove('bg-primary', 'border-primary');
+                dot.classList.add('bg-surface', 'border-outline-variant');
+            }
+        });
+    }
     views.forEach(v => {
         const el = document.getElementById(v);
         if (el) {
@@ -107,7 +121,22 @@ function showView(viewId) {
             }
         }
     });
+    
+    // Support browser back button
+    if (pushToHistory) {
+        window.history.pushState({ view: viewId }, '', `#${viewId}`);
+    }
 }
+
+// Handle hardware back button / browser back swipe
+window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.view) {
+        showView(event.state.view, false); // false prevents infinite loop
+    } else {
+        // Fallback if no state
+        showView('view-neev_fln_onboarding', false);
+    }
+});
 
 // --- App State ---
 let activeAssessor = null;
@@ -124,9 +153,9 @@ function updatePinDots() {
     const dots = pinDotsContainer.children;
     for (let i = 0; i < dots.length; i++) {
         if (i < enteredPin.length) {
-            dots[i].className = "w-4 h-4 rounded-full bg-primary border-2 border-primary";
+            dots[i].className = "pin-dot w-4 h-4 rounded-full bg-primary border-2 border-primary transition-colors";
         } else {
-            dots[i].className = "w-4 h-4 rounded-full border-2 border-outline-variant bg-surface";
+            dots[i].className = "pin-dot w-4 h-4 rounded-full border-2 border-outline-variant bg-surface transition-colors";
         }
     }
 }
@@ -149,20 +178,45 @@ async function verifyLogin() {
 
     const hashedInput = await CryptoHelper.hashPIN(enteredPin, assessor.salt);
     if (hashedInput === assessor.pinHash) {
-        // Derive key and save to volatile state
-        activeSessionKey = await CryptoHelper.deriveKey(enteredPin, assessor.salt);
+        // Derive key and save securely in db.js module closure
+        CryptoHelper.setActiveSessionKey(await CryptoHelper.deriveKey(enteredPin, assessor.salt));
         activeAssessor = assessor;
         
         enteredPin = "";
         updatePinDots();
-        showView('view-neev_fln_dashboard');
-        loadDashboardDropdowns();
+        
+        if (assessor.role === 'super_admin') {
+            showView('view-neev_fln_super_admin_dashboard');
+        } else if (assessor.role === 'school_admin') {
+            showView('view-neev_fln_school_admin_dashboard');
+        } else {
+            showView('view-neev_fln_dashboard');
+            loadDashboardDropdowns();
+        }
     } else {
         alert("Incorrect PIN");
         enteredPin = "";
         updatePinDots();
     }
 }
+
+// Global logout function to clear sensitive state
+window.logout = function() {
+    activeAssessor = null;
+    CryptoHelper.setActiveSessionKey(null);
+    enteredPin = "";
+    updatePinDots();
+    showView('view-neev_fln_login');
+};
+
+// Global logout function to clear sensitive state
+window.logout = function() {
+    activeAssessor = null;
+    CryptoHelper.setActiveSessionKey(null);
+    enteredPin = "";
+    updatePinDots();
+    showView('view-neev_fln_login');
+};
 
 function setupLoginKeypad() {
     const buttons = document.querySelectorAll('#view-neev_fln_login footer button');
@@ -241,6 +295,7 @@ async function loadDashboardDropdowns() {
     districts.forEach(d => addOption(districtSelect, d, d));
 
     districtSelect.onchange = () => {
+        localStorage.setItem('cachedDistrict', districtSelect.value);
         const filteredSchools = schools.filter(s => s.district === districtSelect.value);
         resetSelect(schoolSelect, 'Choose a school...');
         filteredSchools.forEach(s => addOption(schoolSelect, s.id, s.name));
@@ -249,6 +304,7 @@ async function loadDashboardDropdowns() {
     };
 
     schoolSelect.onchange = () => {
+        localStorage.setItem('cachedSchool', schoolSelect.value);
         resetSelect(gradeSelect, 'Choose a grade...');
         for (let i = 1; i <= 12; i++) {
             addOption(gradeSelect, i.toString(), `Grade ${i}`);
@@ -257,6 +313,7 @@ async function loadDashboardDropdowns() {
     };
 
     gradeSelect.onchange = async () => {
+        localStorage.setItem('cachedGrade', gradeSelect.value);
         const students = await DB.getByIndex('students', 'schoolId', schoolSelect.value);
         resetSelect(studentSelect, 'Choose a student...');
         
@@ -267,6 +324,27 @@ async function loadDashboardDropdowns() {
             }
         }
     };
+    
+    // Auto-restore cached selections
+    const cachedDist = localStorage.getItem('cachedDistrict');
+    if (cachedDist && districts.includes(cachedDist)) {
+        districtSelect.value = cachedDist;
+        districtSelect.onchange();
+        setTimeout(() => {
+            const cachedSchool = localStorage.getItem('cachedSchool');
+            if (cachedSchool) {
+                schoolSelect.value = cachedSchool;
+                schoolSelect.onchange();
+                setTimeout(() => {
+                    const cachedGrade = localStorage.getItem('cachedGrade');
+                    if (cachedGrade) {
+                        gradeSelect.value = cachedGrade;
+                        gradeSelect.onchange();
+                    }
+                }, 10);
+            }
+        }, 10);
+    }
 }
 
 function setupDashboard() {
@@ -479,7 +557,7 @@ async function runLiteracyTask() {
     
     passage.words.forEach((w, i) => {
         const wordSpan = document.createElement('span');
-        wordSpan.className = 'passage-word cursor-pointer px-1 rounded transition-colors';
+        wordSpan.className = 'passage-word cursor-pointer px-2 py-1 mx-1 text-2xl rounded transition-colors select-none';
         wordSpan.setAttribute('data-index', i.toString());
         wordSpan.textContent = w;
         wordsDiv.appendChild(wordSpan);
@@ -510,16 +588,18 @@ async function runLiteracyTask() {
             const idx = parseInt(span.getAttribute('data-index'));
             const status = literacyState.wordStatuses[idx];
             
+            if (navigator.vibrate) navigator.vibrate(50); // Haptic feedback
+            
             // Cycle: correct -> incorrect -> skipped -> correct
             if (status === 'correct') {
                 literacyState.wordStatuses[idx] = 'incorrect';
-                span.className = 'passage-word cursor-pointer word-error';
+                span.className = 'passage-word cursor-pointer px-2 py-1 mx-1 text-2xl word-error select-none';
             } else if (status === 'incorrect') {
                 literacyState.wordStatuses[idx] = 'skipped';
-                span.className = 'passage-word cursor-pointer word-skipped';
+                span.className = 'passage-word cursor-pointer px-2 py-1 mx-1 text-2xl word-skipped select-none';
             } else {
                 literacyState.wordStatuses[idx] = 'correct';
-                span.className = 'passage-word cursor-pointer';
+                span.className = 'passage-word cursor-pointer px-2 py-1 mx-1 text-2xl select-none';
             }
         };
     });
@@ -529,6 +609,9 @@ async function runLiteracyTask() {
     let isRecording = false;
     
     if (micBtn) {
+        if (speechEngine) {
+            speechEngine.stop(); // Clean up previous instance
+        }
         speechEngine = new SpeechEngine();
         micBtn.onclick = () => {
             if (!isRecording) {
@@ -714,13 +797,16 @@ async function injectDemoData() {
         { id: "st2", name: "Neha Patel", roll: "102", grade: 2, schoolId: "sch1" }
     ];
 
-    // Build assessor master pin
+    // Pre-populate assessors for different roles
     const salt = CryptoHelper.generateSalt();
     const pinHash = await CryptoHelper.hashPIN("1234", salt);
-    await DB.put('assessors', { id: "admin", username: "Admin", pinHash: pinHash, salt: salt });
+    
+    await DB.put('assessors', { id: "super", username: "State Director", pinHash: pinHash, salt: salt, role: "super_admin" });
+    await DB.put('assessors', { id: "admin", username: "Principal", pinHash: pinHash, salt: salt, role: "school_admin" });
+    await DB.put('assessors', { id: "teacher", username: "Teacher", pinHash: pinHash, salt: salt, role: "assessor" });
 
     // Derive demo AES key locally to encrypt mock roster
-    activeSessionKey = await CryptoHelper.deriveKey("1234", salt);
+    CryptoHelper.setActiveSessionKey(await CryptoHelper.deriveKey("1234", salt));
 
     for (let s of studentData) {
         const encName = await CryptoHelper.encryptData(s.name);
@@ -761,6 +847,10 @@ if ('serviceWorker' in navigator) {
 
 export { setLanguage, showView, initApp, injectDemoData };
 
-document.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", () => {
+        initApp();
+    });
+} else {
     initApp();
-});
+}
