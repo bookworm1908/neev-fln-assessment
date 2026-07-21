@@ -11,7 +11,7 @@ let activeSessionKey = null; // Volatile memory storage for derived AES key
 
 // --- Cryptography & Security Helpers (DPDP Compliance) ---
 
-const CryptoHelper = {
+export const CryptoHelper = {
     // Generates a cryptographically secure random salt
     generateSalt: function(length = 16) {
         const array = new Uint8Array(length);
@@ -102,7 +102,7 @@ const CryptoHelper = {
 
 // --- IndexedDB Wrapper ---
 
-const DB = {
+export const DB = {
     init: function() {
         return new Promise((resolve, reject) => {
             if (dbInstance) return resolve(dbInstance);
@@ -219,5 +219,3 @@ const DB = {
     }
 };
 
-window.CryptoHelper = CryptoHelper;
-window.DB = DB;

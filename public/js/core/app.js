@@ -2,6 +2,10 @@
  * Neev FLN Assessor - Core App Shell, Router, & Interactive Wiring
  * Connects Google Stitch HTML layouts to database, speech, sync, and grading logic.
  */
+import { DB, CryptoHelper } from './db.js';
+import { SyncEngine } from './sync.js';
+import { SpeechEngine } from '../features/speech.js';
+import { Grading } from '../features/grading.js';
 
 // --- i18n Dictionary ---
 const i18nDict = {
@@ -213,40 +217,53 @@ async function loadDashboardDropdowns() {
 
     if (!districtSelect) return;
 
+    // Helper to safely add options
+    const addOption = (selectEl, value, text, isDefault = false) => {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = text;
+        if (isDefault) {
+            opt.disabled = true;
+            opt.selected = true;
+        }
+        selectEl.appendChild(opt);
+    };
+
+    const resetSelect = (selectEl, defaultText) => {
+        selectEl.innerHTML = ''; // safe since it's hardcoded text, or we can use textContent = ''
+        selectEl.textContent = '';
+        addOption(selectEl, '', defaultText, true);
+    };
+
     // Populate districts
     const districts = [...new Set(schools.map(s => s.district))];
-    districtSelect.innerHTML = '<option disabled selected value="">Choose a district...</option>';
-    districts.forEach(d => {
-        districtSelect.innerHTML += `<option value="${d}">${d}</option>`;
-    });
+    resetSelect(districtSelect, 'Choose a district...');
+    districts.forEach(d => addOption(districtSelect, d, d));
 
     districtSelect.onchange = () => {
         const filteredSchools = schools.filter(s => s.district === districtSelect.value);
-        schoolSelect.innerHTML = '<option disabled selected value="">Choose a school...</option>';
-        filteredSchools.forEach(s => {
-            schoolSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
-        });
-        gradeSelect.innerHTML = '<option disabled selected value="">Choose a grade...</option>';
-        studentSelect.innerHTML = '<option disabled selected value="">Choose a student...</option>';
+        resetSelect(schoolSelect, 'Choose a school...');
+        filteredSchools.forEach(s => addOption(schoolSelect, s.id, s.name));
+        resetSelect(gradeSelect, 'Choose a grade...');
+        resetSelect(studentSelect, 'Choose a student...');
     };
 
     schoolSelect.onchange = () => {
-        gradeSelect.innerHTML = '<option disabled selected value="">Choose a grade...</option>';
+        resetSelect(gradeSelect, 'Choose a grade...');
         for (let i = 1; i <= 12; i++) {
-            gradeSelect.innerHTML += `<option value="${i}">Grade ${i}</option>`;
+            addOption(gradeSelect, i.toString(), `Grade ${i}`);
         }
-        studentSelect.innerHTML = '<option disabled selected value="">Choose a student...</option>';
+        resetSelect(studentSelect, 'Choose a student...');
     };
 
     gradeSelect.onchange = async () => {
         const students = await DB.getByIndex('students', 'schoolId', schoolSelect.value);
-        studentSelect.innerHTML = '<option disabled selected value="">Choose a student...</option>';
+        resetSelect(studentSelect, 'Choose a student...');
         
         for (let st of students) {
             if (st.grade === parseInt(gradeSelect.value)) {
-                // Decrypt student name for display
                 const name = await CryptoHelper.decryptData(st.name);
-                studentSelect.innerHTML += `<option value="${st.id}">${name}</option>`;
+                addOption(studentSelect, st.id, name);
             }
         }
     };
@@ -449,17 +466,41 @@ async function runLiteracyTask() {
     const litSection = document.createElement('section');
     litSection.id = 'literacy-section';
     litSection.className = 'flex flex-col gap-lg w-full max-w-md mx-auto';
-    litSection.innerHTML = `
-        <h2 class="font-title-lg text-title-lg text-on-surface">Task 1: Oral Reading Fluency</h2>
-        <div class="bg-surface border border-outline-variant rounded-[24px] p-xl flex flex-wrap gap-2 text-xl leading-loose" id="literacy-words">
-            ${passage.words.map((w, i) => `<span class="passage-word cursor-pointer px-1 rounded transition-colors" data-index="${i}">${w}</span>`).join(' ')}
-        </div>
-        <div class="flex justify-center gap-md mt-md">
-            <button id="mic-btn" class="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center hover:bg-surface-tint shadow-lg transition-transform active:scale-95">
-                <span class="material-symbols-outlined">mic</span>
-            </button>
-        </div>
-    `;
+    
+    // Safely construct HTML instead of using innerHTML
+    const h2 = document.createElement('h2');
+    h2.className = 'font-title-lg text-title-lg text-on-surface';
+    h2.textContent = 'Task 1: Oral Reading Fluency';
+    litSection.appendChild(h2);
+
+    const wordsDiv = document.createElement('div');
+    wordsDiv.id = 'literacy-words';
+    wordsDiv.className = 'bg-surface border border-outline-variant rounded-[24px] p-xl flex flex-wrap gap-2 text-xl leading-loose';
+    
+    passage.words.forEach((w, i) => {
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'passage-word cursor-pointer px-1 rounded transition-colors';
+        wordSpan.setAttribute('data-index', i.toString());
+        wordSpan.textContent = w;
+        wordsDiv.appendChild(wordSpan);
+        // add space
+        wordsDiv.appendChild(document.createTextNode(' '));
+    });
+    litSection.appendChild(wordsDiv);
+
+    const micDiv = document.createElement('div');
+    micDiv.className = 'flex justify-center gap-md mt-md';
+    const micBtnEl = document.createElement('button');
+    micBtnEl.id = 'mic-btn';
+    micBtnEl.className = 'w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center hover:bg-surface-tint shadow-lg transition-transform active:scale-95';
+    
+    const micIcon = document.createElement('span');
+    micIcon.className = 'material-symbols-outlined';
+    micIcon.textContent = 'mic';
+    micBtnEl.appendChild(micIcon);
+    
+    micDiv.appendChild(micBtnEl);
+    litSection.appendChild(micDiv);
     main.appendChild(litSection);
 
     // Bind tap to score listeners on words
@@ -619,12 +660,22 @@ async function initApp() {
     // Check if assessors exist
     const assessors = await DB.getAll('assessors');
     if (assessors.length > 0) {
-        // Populate Select List
+        // Populate Select List safely
         const select = document.getElementById('assessor-select');
         if (select) {
-            select.innerHTML = '<option disabled selected value="">Tap to choose...</option>';
+            select.textContent = ''; // clear options
+            const defaultOpt = document.createElement('option');
+            defaultOpt.disabled = true;
+            defaultOpt.selected = true;
+            defaultOpt.value = '';
+            defaultOpt.textContent = 'Tap to choose...';
+            select.appendChild(defaultOpt);
+            
             assessors.forEach(a => {
-                select.innerHTML += `<option value="${a.id}">${a.username}</option>`;
+                const opt = document.createElement('option');
+                opt.value = a.id;
+                opt.textContent = a.username;
+                select.appendChild(opt);
             });
         }
         showView('view-neev_fln_login');
@@ -688,18 +739,27 @@ async function injectDemoData() {
     // Repopulate Select dropdown
     const select = document.getElementById('assessor-select');
     if (select) {
-        select.innerHTML = `<option value="admin">Admin</option>`;
+        select.textContent = '';
+        const opt = document.createElement('option');
+        opt.value = 'admin';
+        opt.textContent = 'Admin';
+        select.appendChild(opt);
     }
     
     showView('view-neev_fln_login');
 }
 
-window.App = {
-    setLanguage,
-    showView,
-    initApp,
-    injectDemoData
-};
+// Handle Background Sync message from Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'TRIGGER_SYNC') {
+            console.log("Received background sync trigger from SW");
+            SyncEngine.syncAll();
+        }
+    });
+}
+
+export { setLanguage, showView, initApp, injectDemoData };
 
 document.addEventListener("DOMContentLoaded", () => {
     initApp();

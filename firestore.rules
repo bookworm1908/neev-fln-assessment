@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Assessments collection: Assessor can only write and read their own students' assessments
+    match /assessments/{assessmentId} {
+      allow create, update: if request.auth != null && request.resource.data.assessorId == request.auth.uid;
+      allow read: if request.auth != null && resource.data.assessorId == request.auth.uid;
+    }
+    
+    // Default deny all other paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

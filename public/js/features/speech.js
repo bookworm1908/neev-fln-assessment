@@ -3,7 +3,7 @@
  * Implements sliding-window Levenshtein matching and offline diagnostics
  */
 
-class SpeechEngine {
+export class SpeechEngine {
     constructor() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
@@ -140,5 +140,3 @@ class SpeechEngine {
         } catch(e) {}
     }
 }
-
-window.SpeechEngine = SpeechEngine;

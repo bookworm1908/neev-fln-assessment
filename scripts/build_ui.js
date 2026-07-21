@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const stitchDir = path.join(__dirname, 'stitch_neev_fln_onboarding_screen');
-const indexFile = path.join(__dirname, 'index.html');
+const stitchDir = path.join(__dirname, '..', 'src', 'views');
+const indexFile = path.join(__dirname, '..', 'public', 'index.html');
 
 const views = [
   'neev_fln_onboarding',
@@ -61,11 +61,7 @@ for (let view of views) {
 
 mainHtml += `
     <!-- App Logic Scripts -->
-    <script src="db.js"></script>
-    <script src="grading.js"></script>
-    <script src="sync.js"></script>
-    <script src="speech.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="js/core/app.js"></script>
 </body>
 </html>
 `;

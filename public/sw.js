@@ -8,11 +8,11 @@ const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
     '/index.css',
-    '/db.js',
-    '/speech.js',
-    '/grading.js',
-    '/sync.js',
-    '/app.js',
+    '/js/core/db.js',
+    '/js/features/speech.js',
+    '/js/features/grading.js',
+    '/js/core/sync.js',
+    '/js/core/app.js',
     '/manifest.json',
     'https://cdn.tailwindcss.com' // Tailwind offline caching
 ];
@@ -45,22 +45,37 @@ self.addEventListener('activate', event => {
     self.clients.claim();
 });
 
-// Fetch Event: Cache First, then Network
+// Fetch Event: Stale-While-Revalidate
 self.addEventListener('fetch', event => {
     // We don't cache POST/PATCH REST API calls
     if (event.request.method !== 'GET') return;
     
     event.respondWith(
-        caches.match(event.request).then(cachedResponse => {
-            if (cachedResponse) {
-                return cachedResponse;
-            }
-            return fetch(event.request).then(networkResponse => {
-                return networkResponse;
-            }).catch(() => {
-                // Return offline fallback if network fails
-                return caches.match('/index.html');
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.match(event.request).then(cachedResponse => {
+                const fetchedResponse = fetch(event.request).then(networkResponse => {
+                    cache.put(event.request, networkResponse.clone());
+                    return networkResponse;
+                }).catch(() => {
+                    // Return offline fallback if network fails
+                    if (!cachedResponse && event.request.mode === 'navigate') {
+                        return cache.match('/index.html');
+                    }
+                });
+                return cachedResponse || fetchedResponse;
             });
         })
     );
+});
+
+// Background Sync Event for Offline Data Uploads
+self.addEventListener('sync', event => {
+    if (event.tag === 'sync-assessments') {
+        console.log('Background Sync triggered for assessments.');
+        event.waitUntil(
+            self.clients.matchAll().then(clients => {
+                clients.forEach(client => client.postMessage({ type: 'TRIGGER_SYNC' }));
+            })
+        );
+    }
 });

@@ -3,7 +3,7 @@
  * Handles calculations for 4-Tier Assessment Standards and Grade Alignment
  */
 
-const Grading = {
+export const Grading = {
     // Literacy: Calculates Words Correct Per Minute (WCPM) and Accuracy
     calculateLiteracyMetrics: function(totalWordsRead, errorCount, durationSeconds) {
         const correctWords = Math.max(0, totalWordsRead - errorCount);
@@ -55,4 +55,3 @@ const Grading = {
     }
 };
 
-window.Grading = Grading;
