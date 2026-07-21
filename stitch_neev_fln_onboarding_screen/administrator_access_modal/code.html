@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-modal {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .passcode-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #72787f;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .passcode-dot.filled {
+            background-color: #30628a;
+            border-color: #30628a;
+            transform: scale(1.1);
+        }
+        .keypad-button:active {
+            transform: scale(0.92);
+            background-color: #e2e2e2;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#e2e2e2",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed": "#001d32",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#2f3131",
+                      "secondary-fixed": "#e5e2e1",
+                      "surface-tint": "#30628a",
+                      "error-container": "#ffdad6",
+                      "secondary": "#5f5e5e",
+                      "surface": "#f9f9f9",
+                      "on-tertiary": "#ffffff",
+                      "primary": "#30628a",
+                      "outline": "#72787f",
+                      "surface-dim": "#dadada",
+                      "surface-container-low": "#f4f3f3",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "secondary-container": "#e2dfde",
+                      "surface-container": "#eeeeee",
+                      "on-error-container": "#93000a",
+                      "surface-variant": "#e2e2e2",
+                      "on-primary-container": "#275b82",
+                      "background": "#f9f9f9",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-surface-variant": "#41474e",
+                      "tertiary": "#5d5f5f",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed-dim": "#9bcbf8",
+                      "outline-variant": "#c1c7cf",
+                      "error": "#ba1a1a",
+                      "surface-bright": "#f9f9f9",
+                      "on-tertiary-container": "#555757",
+                      "surface-container-high": "#e8e8e8",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "on-primary-fixed-variant": "#104a70",
+                      "on-background": "#1a1c1c",
+                      "inverse-primary": "#9bcbf8",
+                      "surface-container-highest": "#e2e2e2",
+                      "on-secondary-fixed": "#1b1c1c",
+                      "on-secondary-container": "#636262",
+                      "on-primary": "#ffffff",
+                      "on-secondary-fixed-variant": "#474746",
+                      "on-surface": "#1a1c1c",
+                      "primary-fixed": "#cde5ff",
+                      "tertiary-container": "#cdcdcd",
+                      "primary-container": "#a2d2ff",
+                      "inverse-on-surface": "#f1f1f1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "margin-mobile": "16px",
+                      "base": "8px",
+                      "xl": "32px",
+                      "sm": "12px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "xs": "4px",
+                      "xxl": "48px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Noto Sans"],
+                      "label-lg": ["Noto Sans"],
+                      "body-lg": ["Noto Sans"],
+                      "headline-lg": ["Noto Sans"],
+                      "headline-md": ["Noto Sans"],
+                      "label-md": ["Noto Sans"],
+                      "title-md": ["Noto Sans"],
+                      "body-md": ["Noto Sans"],
+                      "display-lg": ["Noto Sans"],
+                      "title-lg": ["Noto Sans"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "400"}],
+                      "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                      "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                      "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                      "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+                      "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-surface overflow-hidden">
+<!-- Background Layer (Simulating SCREEN_14 with high blur) -->
+<div class="fixed inset-0 z-0 blur-xl opacity-60 scale-110">
+<div class="w-full h-full" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJt1s2o8VyvWhS6YWdbtmWxX-88lfSZf62tfvLQyTEqtiZpX04mG5OZS6_fLgKei-UGes3avR2XSKDTClYQl4TvX0c4ERmCT7HNxBCd07Hadhaf00kKPbD5ASt1NNgeaYjadrMRVmhOJd6xiYnHENHtSskA6SSSaOH2S5kNMJzIMzWnyrVsEYkOErQqbSjsZe3jxJ7bsnOpHU8TflInf53nKXPqw1At7KHXG76Z0I6-pRxT1r0HrINZQ')"></div>
+</div>
+<!-- Modal Backdrop -->
+<div class="fixed inset-0 z-10 bg-black/5 flex items-center justify-center p-md">
+<!-- Modal Container -->
+<div class="glass-modal w-full max-w-sm rounded-[28px] border border-outline-variant overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-300">
+<!-- Modal Header -->
+<div class="px-xl pt-xl pb-lg text-center">
+<span class="material-symbols-outlined text-primary text-4xl mb-sm" style="font-variation-settings: 'FILL' 1;">lock</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Administrator Access</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Enter your 4-digit security code</p>
+</div>
+<!-- Passcode Display Area -->
+<div class="flex justify-center gap-lg py-lg">
+<div class="passcode-dot" id="dot-0"></div>
+<div class="passcode-dot" id="dot-1"></div>
+<div class="passcode-dot" id="dot-2"></div>
+<div class="passcode-dot" id="dot-3"></div>
+</div>
+<!-- Keypad -->
+<div class="grid grid-cols-3 gap-xs px-xl pb-xl">
+<!-- Numbers 1-9 -->
+<button class="keypad-button h-16 rounded-full flex items-center justify-center font-title-lg text-title-lg text-on-surface transition-all" onclick="handleKey('1')">1</button>
+<button class="keypad-button h-16 rounded-full flex items-center justify-center font-title-lg text-title-lg text-on-surface transition-all" onclick="handleKey('2')">2</button>
+<button class="keypad-button h-16 rounded-full flex items-center justify-center font-title-lg text-title-lg text-on-surface transition-all" onclick="handleKey('3')">3</button>
+<button class="keypad-button h-16 rounded-full flex items-center justify-center font-title-lg text-title-lg text-on-surface transition-all" onclick="handleKey('4')">4</button>
+<button class="keypad-button h-16 rounded-full flex items-center justify-center font-title-lg text-title-lg text-on-surface transition-all" onclick="handleKey('5')">5</button>
+<button class="keypad-button h-16 rounded-full flex items-center justify-center font-title-lg text-title-lg text-on-surface transition-all" onclick="handleKey('6')">6</button>
+<button class="keypad-button h-16 rounded-full flex items-center justify-center font-title-lg text-title-lg text-on-surface transition-all" onclick="handleKey('7')">7</button>
+<button class="keypad-button h-16 rounded-full flex items-center justify-center font-title-lg text-title-lg text-on-surface transition-all" onclick="handleKey('8')">8</button>
+<button class="keypad-button h-16 rounded-full flex items-center justify-center font-title-lg text-title-lg text-on-surface transition-all" onclick="handleKey('9')">9</button>
+<!-- Bottom Row -->
+<div class="h-16"></div>
+<button class="keypad-button h-16 rounded-full flex items-center justify-center font-title-lg text-title-lg text-on-surface transition-all" onclick="handleKey('0')">0</button>
+<button class="keypad-button h-16 rounded-full flex items-center justify-center text-on-surface transition-all" onclick="handleDelete()">
+<span class="material-symbols-outlined">backspace</span>
+</button>
+</div>
+<!-- Footer Actions -->
+<div class="px-xl pb-xl flex gap-md">
+<button class="flex-1 h-12 rounded-full border border-outline font-label-lg text-label-lg text-secondary hover:bg-surface-container-high transition-colors">
+                    Cancel
+                </button>
+<button class="flex-1 h-12 rounded-full bg-primary font-label-lg text-label-lg text-on-primary shadow-lg shadow-primary/20 opacity-50 transition-all cursor-not-allowed" disabled="" id="unlock-btn">
+                    Unlock
+                </button>
+</div>
+</div>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        let passcode = "";
+        const MAX_LENGTH = 4;
+        const dots = [
+            document.getElementById('dot-0'),
+            document.getElementById('dot-1'),
+            document.getElementById('dot-2'),
+            document.getElementById('dot-3')
+        ];
+        const unlockBtn = document.getElementById('unlock-btn');
+
+        function updateUI() {
+            dots.forEach((dot, index) => {
+                if (index < passcode.length) {
+                    dot.classList.add('filled');
+                } else {
+                    dot.classList.remove('filled');
+                }
+            });
+
+            if (passcode.length === MAX_LENGTH) {
+                unlockBtn.disabled = false;
+                unlockBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                unlockBtn.classList.add('scale-105');
+            } else {
+                unlockBtn.disabled = true;
+                unlockBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                unlockBtn.classList.remove('scale-105');
+            }
+        }
+
+        function handleKey(num) {
+            if (passcode.length < MAX_LENGTH) {
+                passcode += num;
+                updateUI();
+            }
+        }
+
+        function handleDelete() {
+            if (passcode.length > 0) {
+                passcode = passcode.slice(0, -1);
+                updateUI();
+            }
+        }
+
+        // Add visual feedback to unlock button
+        unlockBtn.addEventListener('click', () => {
+            unlockBtn.classList.add('scale-95');
+            setTimeout(() => {
+                alert('Access Granted');
+                unlockBtn.classList.remove('scale-95');
+            }, 100);
+        });
+    </script>
+</body></html>

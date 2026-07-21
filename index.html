@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html class="h-full" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="theme-color" content="#30628a" />
+    <link rel="manifest" href="manifest.json" />
+    <title>Neev FLN Assessor</title>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="index.css" rel="stylesheet" />
+    
+    <style>
+        .view-section { display: none !important; }
+        .view-section.active { display: flex !important; }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#f9f9f9",
+                      "outline-variant": "#c1c7cf",
+                      "secondary-container": "#e2dfde",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "surface-container-low": "#f4f3f3",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e2e2e2",
+                      "surface-dim": "#dadada",
+                      "on-tertiary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-surface-variant": "#41474e",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-error": "#ffffff",
+                      "on-background": "#1a1c1c",
+                      "tertiary": "#5d5f5f",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "tertiary-fixed": "#e2e2e2",
+                      "on-primary-container": "#275b82",
+                      "on-tertiary-container": "#555757",
+                      "on-secondary-fixed": "#1b1c1c",
+                      "surface": "#f9f9f9",
+                      "tertiary-container": "#cdcdcd",
+                      "primary-fixed-dim": "#9bcbf8",
+                      "on-secondary-container": "#636262",
+                      "on-surface": "#1a1c1c",
+                      "on-primary-fixed": "#001d32",
+                      "primary-container": "#a2d2ff",
+                      "on-primary-fixed-variant": "#104a70",
+                      "surface-container": "#eeeeee",
+                      "outline": "#72787f",
+                      "surface-variant": "#e2e2e2",
+                      "secondary": "#5f5e5e",
+                      "on-error-container": "#93000a",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "inverse-primary": "#9bcbf8",
+                      "surface-tint": "#30628a",
+                      "inverse-on-surface": "#f1f1f1",
+                      "primary": "#30628a",
+                      "inverse-surface": "#2f3131",
+                      "primary-fixed": "#cde5ff",
+                      "background": "#f9f9f9",
+                      "on-secondary-fixed-variant": "#474746",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-high": "#e8e8e8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "xl": "32px",
+                      "xs": "4px",
+                      "sm": "12px",
+                      "base": "8px",
+                      "xxl": "48px",
+                      "md": "16px",
+                      "margin-mobile": "16px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Noto Sans"
+                      ],
+                      "body-md": [
+                              "Noto Sans"
+                      ],
+                      "title-md": [
+                              "Noto Sans"
+                      ],
+                      "label-md": [
+                              "Noto Sans"
+                      ],
+                      "label-lg": [
+                              "Noto Sans"
+                      ],
+                      "headline-lg": [
+                              "Noto Sans"
+                      ],
+                      "title-lg": [
+                              "Noto Sans"
+                      ],
+                      "body-lg": [
+                              "Noto Sans"
+                      ],
+                      "headline-lg-mobile": [
+                              "Noto Sans"
+                      ],
+                      "display-lg": [
+                              "Noto Sans"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.15px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.1px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="h-full bg-[#f9f9f9] text-[#1a1c1c] flex flex-col min-h-screen">
+
+<!-- VIEW: neev_fln_onboarding -->
+<div id="view-neev_fln_onboarding" class="view-section flex-col h-full">
+
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-background dark:bg-background h-16 flex items-center justify-between px-margin-mobile z-40">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim cursor-pointer active:scale-95 transition-transform" data-icon="menu">menu</span>
+<span class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Neev FLN Assessor</span>
+</div>
+
+<div class="flex items-center gap-xs">
+    <select class="bg-surface border border-outline-variant text-on-surface text-sm rounded-full px-3 py-1 cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none" onchange="window.App.setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="hi">HI</option>
+        <option value="hinglish">HIN</option>
+    </select>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop py-xl overflow-y-auto">
+<div class="w-full max-w-md mx-auto text-center mb-xl">
+<div class="mb-sm text-primary">
+<span class="material-symbols-outlined" style="font-size: 48px;">school</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg mb-sm font-bold text-on-surface">Welcome to Neev FLN</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Foundational Literacy and Numeracy assessment made simple.</p>
+</div>
+<div class="w-full max-w-md mx-auto flex flex-col gap-sm">
+<!-- Card 1 -->
+<button class="onboarding-card w-full flex items-center p-lg gap-sm cursor-pointer group text-left">
+<div class="icon-container w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container transition-colors shrink-0">
+<span class="material-symbols-outlined text-2xl group-hover:text-on-primary-container" style="font-variation-settings: 'wght' 200;">play_arrow</span>
+</div>
+<div class="flex-1">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-xs">Explore with Demo Data</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Try out the features with sample student profiles.</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<!-- Card 2 -->
+<button class="onboarding-card w-full flex items-center p-lg gap-sm cursor-pointer group text-left">
+<div class="icon-container w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container transition-colors shrink-0">
+<span class="material-symbols-outlined text-2xl group-hover:text-on-primary-container" style="font-variation-settings: 'wght' 200;">settings</span>
+</div>
+<div class="flex-1">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-xs">Set up for my NGO</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Configure the app for your specific organizational needs.</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<!-- Card 3 -->
+<button class="onboarding-card w-full flex items-center p-lg gap-sm cursor-pointer group text-left">
+<div class="icon-container w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container transition-colors shrink-0">
+<span class="material-symbols-outlined text-2xl group-hover:text-on-primary-container" style="font-variation-settings: 'wght' 200;">upload_file</span>
+</div>
+<div class="flex-1">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-xs">Import NGO Configuration</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Load an existing configuration file.</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+</div>
+</main>
+
+</div>
+
+<!-- VIEW: neev_fln_login -->
+<div id="view-neev_fln_login" class="view-section flex-col h-full">
+<button class="absolute top-lg w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container-highest active:scale-95 transition-all text-on-surface-variant right-lg" aria-label="Settings">
+  <span class="material-symbols-outlined text-[24px]">settings</span>
+</button>
+<!-- Header Section -->
+<header class="w-full max-w-sm flex flex-col items-center mt-xl">
+<div class="w-16 h-16 bg-primary-container rounded-[24px] flex items-center justify-center mb-lg">
+<span class="material-symbols-outlined text-on-primary-container text-headline-lg font-variation-settings-'wght'-300">school</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary text-center mb-base">Welcome back, Assessor</h1>
+<p class="font-body-md text-body-md text-on-surface-variant text-center">Please identify yourself and enter your PIN.</p>
+
+<div class="flex items-center gap-xs">
+    <select class="bg-surface border border-outline-variant text-on-surface text-sm rounded-full px-3 py-1 cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none" onchange="window.App.setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="hi">HI</option>
+        <option value="hinglish">HIN</option>
+    </select>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="w-full max-w-sm flex-grow flex flex-col items-center justify-center gap-xl mt-lg">
+<!-- Profile Picker Card -->
+<div class="w-full bg-surface border border-outline-variant rounded-[24px] p-lg ambient-shadow-hover transition-shadow duration-300">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-sm ml-sm" for="assessor-select">Select Assessor Name</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-lowest border border-outline-variant rounded-full py-sm pl-md pr-xl font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors cursor-pointer" id="assessor-select">
+<option disabled="" selected="" value="">Tap to choose...</option>
+<option value="1">Aisha Sharma</option>
+<option value="2">Ravi Kumar</option>
+<option value="3">Priya Desai</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-md">
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+</div>
+<!-- PIN Entry Dots -->
+<div class="flex items-center justify-center gap-lg my-lg">
+<!-- Active Dot -->
+<div class="w-4 h-4 rounded-full bg-primary border-2 border-primary"></div>
+<!-- Inactive Dots -->
+<div class="w-4 h-4 rounded-full border-2 border-outline-variant bg-surface"></div>
+<div class="w-4 h-4 rounded-full border-2 border-outline-variant bg-surface"></div>
+<div class="w-4 h-4 rounded-full border-2 border-outline-variant bg-surface"></div>
+</div>
+</main>
+<!-- Numeric Keypad -->
+<footer class="w-full max-w-sm mb-lg">
+<div class="grid grid-cols-3 gap-y-6 gap-x-8 justify-items-center">
+<!-- Row 1 -->
+<button class="w-[72px] h-[72px] rounded-full bg-surface-container hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center text-on-surface font-headline-md text-headline-md">1</button>
+<button class="w-[72px] h-[72px] rounded-full bg-surface-container hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center text-on-surface font-headline-md text-headline-md">2</button>
+<button class="w-[72px] h-[72px] rounded-full bg-surface-container hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center text-on-surface font-headline-md text-headline-md">3</button>
+<!-- Row 2 -->
+<button class="w-[72px] h-[72px] rounded-full bg-surface-container hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center text-on-surface font-headline-md text-headline-md">4</button>
+<button class="w-[72px] h-[72px] rounded-full bg-surface-container hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center text-on-surface font-headline-md text-headline-md">5</button>
+<button class="w-[72px] h-[72px] rounded-full bg-surface-container hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center text-on-surface font-headline-md text-headline-md">6</button>
+<!-- Row 3 -->
+<button class="w-[72px] h-[72px] rounded-full bg-surface-container hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center text-on-surface font-headline-md text-headline-md">7</button>
+<button class="w-[72px] h-[72px] rounded-full bg-surface-container hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center text-on-surface font-headline-md text-headline-md">8</button>
+<button class="w-[72px] h-[72px] rounded-full bg-surface-container hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center text-on-surface font-headline-md text-headline-md">9</button>
+<!-- Row 4 -->
+<button class="w-[72px] h-[72px] rounded-full bg-transparent flex items-center justify-center text-on-surface-variant font-label-lg text-label-lg active:opacity-70 transition-opacity">Clear</button>
+<button class="w-[72px] h-[72px] rounded-full bg-surface-container hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center text-on-surface font-headline-md text-headline-md">0</button>
+<button class="w-[72px] h-[72px] rounded-full bg-transparent flex items-center justify-center text-on-surface-variant active:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-[32px] font-variation-settings-'wght'-300">backspace</span>
+</button>
+</div>
+</footer>
+
+
+
+</div>
+
+<!-- VIEW: neev_fln_dashboard -->
+<div id="view-neev_fln_dashboard" class="view-section flex-col h-full">
+
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim text-primary dark:text-primary-fixed-dim font-title-lg text-title-lg-mobile md:font-title-lg md:text-title-lg w-full sticky top-0 z-50 border-b border-outline-variant flat no shadows flex items-center justify-between px-margin-mobile h-16 w-full hover:bg-surface-container-highest transition-colors active:scale-95 transition-transform">
+<div class="flex items-center gap-md">
+<button class="p-2 rounded-full hover:bg-surface-variant flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary font-bold">Neev FLN Assessor</h1>
+</div>
+<button class="p-2 rounded-full hover:bg-surface-variant flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined" data-icon="sync">sync</span>
+</button>
+
+<div class="flex items-center gap-xs">
+    <select class="bg-surface border border-outline-variant text-on-surface text-sm rounded-full px-3 py-1 cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none" onchange="window.App.setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="hi">HI</option>
+        <option value="hinglish">HIN</option>
+    </select>
+</div>
+</header>
+<!-- Status Bar -->
+<div class="bg-surface-container-low px-margin-mobile py-sm flex justify-between items-center text-label-md font-label-md text-on-surface-variant border-b border-surface-container">
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-success"></span>
+<span>Online</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="cloud_sync">cloud_sync</span>
+<span>3 Pending Syncs</span>
+</div>
+</div>
+<!-- Main Content Canvas -->
+<main class="flex-grow px-margin-mobile pt-lg pb-xl flex flex-col gap-xl">
+<!-- Module Selection Segmented Control -->
+<section class="flex bg-surface-container p-1 rounded-full w-full mx-auto max-w-md">
+<button class="flex-1 py-sm px-md rounded-full bg-primary-container text-on-primary-container font-label-lg text-label-lg transition-colors shadow-sm text-center">
+                Literacy (Hindi/English)
+            </button>
+<button class="flex-1 py-sm px-md rounded-full text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-highest transition-colors text-center">
+                Numeracy
+            </button>
+</section>
+<!-- Selection Form (Card Style) -->
+<section class="bg-surface rounded-2xl border border-surface-container-highest p-lg shadow-sm flex flex-col gap-lg w-full max-w-md mx-auto">
+<h2 class="font-title-md text-title-md text-on-surface">Assessment Setup</h2>
+<div class="flex flex-col gap-md">
+<!-- Select District -->
+<div class="relative">
+<label class="absolute -top-2 left-3 bg-surface px-1 text-label-md font-label-md text-on-surface-variant z-10" for="district">Select District</label>
+<select class="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-body-lg font-body-lg text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors" id="district">
+<option disabled="" selected="" value="">Choose a district...</option>
+<option value="d1">District Alpha</option>
+<option value="d2">District Beta</option>
+</select>
+</div>
+<!-- Select School -->
+<div class="relative mt-2">
+<label class="absolute -top-2 left-3 bg-surface px-1 text-label-md font-label-md text-on-surface-variant z-10" for="school">Select School</label>
+<select class="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-body-lg font-body-lg text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors" id="school">
+<option disabled="" selected="" value="">Choose a school...</option>
+<option value="s1">Govt. Primary School 1</option>
+<option value="s2">Govt. Primary School 2</option>
+</select>
+</div>
+<!-- Select Grade -->
+<div class="relative mt-2">
+<label class="absolute -top-2 left-3 bg-surface px-1 text-label-md font-label-md text-on-surface-variant z-10" for="grade">Select Grade</label>
+<select class="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-body-lg font-body-lg text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors" id="grade">
+<option disabled="" selected="" value="">Choose a grade...</option>
+<option value="g1">Grade 1</option>
+<option value="g2">Grade 2</option>
+<option value="g3">Grade 3</option>
+</select>
+</div>
+<!-- Select Student -->
+<div class="relative mt-2">
+<label class="absolute -top-2 left-3 bg-surface px-1 text-label-md font-label-md text-on-surface-variant z-10" for="student">Select Student</label>
+<select class="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-body-lg font-body-lg text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors" id="student">
+<option disabled="" selected="" value="">Choose a student...</option>
+<option value="st1">Aarav Patel</option>
+<option value="st2">Diya Sharma</option>
+<option value="st3">Rohan Kumar</option>
+</select>
+</div>
+</div>
+</section>
+</main>
+<!-- Fixed Bottom Action Area -->
+<div class="fixed bottom-20 left-0 right-0 p-margin-mobile bg-gradient-to-t from-surface via-surface to-transparent z-40 md:hidden flex justify-center">
+<button class="w-full max-w-md bg-success hover:bg-emerald-500 text-on-success font-title-md text-title-md py-md rounded-full shadow-sm transition-transform active:scale-95 flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined" data-icon="play_arrow">play_arrow</span>
+            Start Assessment Session
+        </button>
+</div>
+<!-- Desktop Action Area (Hidden on mobile) -->
+<div class="hidden md:flex justify-center px-margin-desktop pb-xl">
+<button class="w-full max-w-md bg-success hover:bg-emerald-500 text-on-success font-title-md text-title-md py-md rounded-full shadow-sm transition-transform active:scale-95 flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined" data-icon="play_arrow">play_arrow</span>
+            Start Assessment Session
+        </button>
+</div>
+<!-- BottomNavBar (Semantic Match: Dashboard) -->
+<nav class="bg-surface-container dark:bg-surface-container-low text-primary dark:text-primary-fixed-dim font-label-md text-label-md font-title-lg text-title-lg text-primary fixed bottom-0 w-full z-50 h-20 bg-surface-container flat no shadows hover:bg-surface-container-highest ripple-effect active:scale-90 flex justify-around items-center w-full px-base pb-safe md:hidden">
+<!-- Dashboard (Active) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 min-w-[64px]">
+<span class="material-symbols-outlined icon-fill" data-icon="dashboard" data-weight="fill">dashboard</span>
+<span class="mt-1">Dashboard</span>
+</button>
+<!-- Assessments -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant min-w-[64px]">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="mt-1">Assessments</span>
+</button>
+<!-- History -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant min-w-[64px]">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="mt-1">History</span>
+</button>
+</nav>
+
+</div>
+
+<!-- VIEW: neev_fln_numeracy_assessment -->
+<div id="view-neev_fln_numeracy_assessment" class="view-section flex-col h-full">
+
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 w-full z-40 bg-surface-container-low flex flex-col justify-center px-margin-mobile w-full h-auto py-md">
+<div class="flex items-center justify-between w-full h-16 max-w-7xl mx-auto">
+<button aria-label="Back" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md-mobile text-primary font-bold text-center flex-1 mx-4 truncate">
+                Rohan Sharma, Grade 3
+            </h1>
+<button aria-label="Help" class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors text-primary">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+
+<div class="flex items-center gap-xs">
+    <select class="bg-surface border border-outline-variant text-on-surface text-sm rounded-full px-3 py-1 cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none" onchange="window.App.setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="hi">HI</option>
+        <option value="hinglish">HIN</option>
+    </select>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-margin-mobile py-lg md:px-margin-desktop md:py-xl flex flex-col gap-xl pb-32">
+<!-- Task Header -->
+<section class="flex flex-col gap-base">
+<h2 class="font-title-lg text-title-lg text-on-surface">Task 1: Number Recognition</h2>
+</section>
+<!-- Number Grid -->
+<section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-md">
+<!-- Card 405 (Error/Red) -->
+<div class="bg-error-container bg-opacity-30 border border-error bg-opacity-20 rounded-xl p-lg flex flex-col items-center justify-center gap-sm relative ambient-shadow-hover transition-all group">
+<span class="font-display-lg text-display-lg text-on-surface group-hover:scale-[1.02] transition-transform">405</span>
+<div class="absolute top-sm right-sm text-error bg-white rounded-full p-xs shadow-sm flex items-center justify-center w-6 h-6">
+<span class="material-symbols-outlined text-[16px] icon-fill-1">close</span>
+</div>
+</div>
+<!-- Card 781 (Success/Green) -->
+<div class="bg-primary-container bg-opacity-30 border border-primary-container rounded-xl p-lg flex flex-col items-center justify-center gap-sm relative ambient-shadow-hover transition-all group">
+<span class="font-display-lg text-display-lg text-on-surface group-hover:scale-[1.02] transition-transform">781</span>
+<div class="absolute top-sm right-sm text-[#388E3C] bg-white rounded-full p-xs shadow-sm flex items-center justify-center w-6 h-6">
+<span class="material-symbols-outlined text-[16px] icon-fill-1">check</span>
+</div>
+</div>
+<!-- Card 102 (Error/Red) -->
+<div class="bg-error-container bg-opacity-30 border border-error bg-opacity-20 rounded-xl p-lg flex flex-col items-center justify-center gap-sm relative ambient-shadow-hover transition-all group">
+<span class="font-display-lg text-display-lg text-on-surface group-hover:scale-[1.02] transition-transform">102</span>
+<div class="absolute top-sm right-sm text-error bg-white rounded-full p-xs shadow-sm flex items-center justify-center w-6 h-6">
+<span class="material-symbols-outlined text-[16px] icon-fill-1">close</span>
+</div>
+</div>
+<!-- Card 650 (Success/Green) -->
+<div class="bg-primary-container bg-opacity-30 border border-primary-container rounded-xl p-lg flex flex-col items-center justify-center gap-sm relative ambient-shadow-hover transition-all group">
+<span class="font-display-lg text-display-lg text-on-surface group-hover:scale-[1.02] transition-transform">650</span>
+<div class="absolute top-sm right-sm text-[#388E3C] bg-white rounded-full p-xs shadow-sm flex items-center justify-center w-6 h-6">
+<span class="material-symbols-outlined text-[16px] icon-fill-1">check</span>
+</div>
+</div>
+<!-- Card 924 (Success/Green) -->
+<div class="bg-primary-container bg-opacity-30 border border-primary-container rounded-xl p-lg flex flex-col items-center justify-center gap-sm relative ambient-shadow-hover transition-all group">
+<span class="font-display-lg text-display-lg text-on-surface group-hover:scale-[1.02] transition-transform">924</span>
+<div class="absolute top-sm right-sm text-[#388E3C] bg-white rounded-full p-xs shadow-sm flex items-center justify-center w-6 h-6">
+<span class="material-symbols-outlined text-[16px] icon-fill-1">check</span>
+</div>
+</div>
+</section>
+<!-- Arithmetic Section -->
+<section class="mt-lg">
+<div class="bg-surface border border-[#E0E0E0] rounded-[24px] p-xl flex flex-col items-center justify-center min-h-[200px] ambient-shadow-hover transition-all">
+<div class="text-on-surface font-display-lg text-display-lg md:text-[72px] md:leading-[80px]">
+                    24 / 4 = ?
+                </div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Area (Fixed) -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container bg-opacity-95 backdrop-blur-sm border-t border-[#E0E0E0] p-margin-mobile z-50 flex justify-center gap-md rounded-t-[24px]">
+<div class="w-full max-w-md flex justify-between gap-md pb-safe">
+<button class="flex-1 bg-error-container text-[#93000a] h-16 rounded-full flex items-center justify-center gap-sm font-label-lg text-label-lg hover:bg-opacity-80 transition-all active:scale-95 shadow-sm">
+<span class="material-symbols-outlined icon-fill-1 text-2xl">close</span>
+</button>
+<button class="flex-1 bg-[#A2D2FF] text-[#212121] h-16 rounded-full flex items-center justify-center gap-sm font-label-lg text-label-lg hover:bg-opacity-80 transition-all active:scale-95 shadow-sm">
+<span class="material-symbols-outlined icon-fill-1 text-2xl">check</span>
+</button>
+</div>
+</div>
+
+</div>
+
+<!-- VIEW: neev_fln_assessment_results -->
+<div id="view-neev_fln_assessment_results" class="view-section flex-col h-full">
+
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface dark:bg-inverse-surface flex flex-col justify-center px-margin-mobile h-auto py-md">
+<div class="flex items-center justify-between w-full">
+<button class="text-primary dark:text-inverse-primary hover:bg-surface-container-high dark:hover:bg-surface-container-highest p-2 rounded-full transition-all duration-200 active:scale-[0.98]">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary dark:text-inverse-primary font-bold">Assessment Results</h1>
+<button class="text-primary dark:text-inverse-primary hover:bg-surface-container-high dark:hover:bg-surface-container-highest p-2 rounded-full transition-all duration-200 active:scale-[0.98]">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+
+<div class="flex items-center gap-xs">
+    <select class="bg-surface border border-outline-variant text-on-surface text-sm rounded-full px-3 py-1 cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none" onchange="window.App.setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="hi">HI</option>
+        <option value="hinglish">HIN</option>
+    </select>
+</div>
+</header>
+<main class="flex-grow px-margin-mobile flex flex-col gap-xl">
+<!-- Results Card -->
+<section class="bg-surface rounded-2xl border border-secondary-fixed-dim p-lg flex flex-col items-center gap-md mt-md">
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="circular-progress w-full h-full" viewbox="0 0 100 100">
+<circle class="text-surface-variant stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="8"></circle>
+<circle class="text-primary stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-dasharray="251.2" stroke-dashoffset="50.24" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-headline-md text-headline-md font-bold text-primary">80%</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Accuracy</span>
+</div>
+</div>
+<div class="bg-[#d4edda] text-[#155724] px-4 py-2 rounded-lg border border-[#c3e6cb] flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span class="font-label-lg text-label-lg font-bold">NIPUN Numeracy Benchmark Met</span>
+</div>
+</section>
+<!-- Summary Metrics Grid -->
+<section class="grid grid-cols-2 gap-md">
+<div class="bg-surface rounded-2xl border border-secondary-fixed-dim p-md flex flex-col gap-sm">
+<span class="font-label-md text-label-md text-on-surface-variant">Number Recognition</span>
+<span class="font-title-lg text-title-lg font-bold text-primary">100%</span>
+</div>
+<div class="bg-surface rounded-2xl border border-secondary-fixed-dim p-md flex flex-col gap-sm">
+<span class="font-label-md text-label-md text-on-surface-variant">Operations Solved</span>
+<span class="font-title-lg text-title-lg font-bold text-primary">4/5</span>
+</div>
+</section>
+<!-- Details List -->
+<section class="flex flex-col gap-md">
+<h2 class="font-title-md text-title-md text-on-surface">Assessment Details</h2>
+<div class="bg-surface rounded-2xl border border-secondary-fixed-dim overflow-hidden divide-y divide-secondary-fixed-dim">
+<div class="p-md flex justify-between items-center bg-surface-bright">
+<span class="font-body-lg text-body-lg text-on-surface">2 + 3 = 5</span>
+<span class="material-symbols-outlined text-[#28a745]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="p-md flex justify-between items-center bg-surface-bright">
+<span class="font-body-lg text-body-lg text-on-surface">7 - 4 = 3</span>
+<span class="material-symbols-outlined text-[#28a745]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="p-md flex justify-between items-center bg-surface-bright">
+<span class="font-body-lg text-body-lg text-on-surface">12 / 3 = 4</span>
+<span class="material-symbols-outlined text-[#28a745]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="p-md flex justify-between items-center bg-error-container">
+<span class="font-body-lg text-body-lg text-on-surface">24 / 4 = 5</span>
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-error">Answered: 5</span>
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">cancel</span>
+</div>
+</div>
+<div class="p-md flex justify-between items-center bg-surface-bright">
+<span class="font-body-lg text-body-lg text-on-surface">5 x 5 = 25</span>
+<span class="material-symbols-outlined text-[#28a745]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Actions -->
+<div class="fixed bottom-[80px] left-0 w-full px-margin-mobile py-md bg-gradient-to-t from-surface to-transparent z-40">
+<button class="w-full bg-primary-container text-on-background font-label-lg text-label-lg font-bold py-4 rounded-full shadow-sm hover:shadow-md transition-shadow">
+            Save &amp; Submit Assessment
+        </button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-4 pb-safe bg-surface-container dark:bg-surface-container-high rounded-t-xl">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-secondary-container hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-full p-2 transition-transform duration-150 active:scale-95 w-16">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 transition-transform duration-150 active:scale-95 w-16">
+<span class="material-symbols-outlined" data-icon="task" style="font-variation-settings: 'FILL' 1;">task</span>
+<span class="font-label-md text-label-md mt-1 font-bold">Assessments</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-secondary-container hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-full p-2 transition-transform duration-150 active:scale-95 w-16">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-md text-label-md mt-1">Students</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-secondary-container hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-full p-2 transition-transform duration-150 active:scale-95 w-16">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md mt-1">Profile</span>
+</button>
+</nav>
+
+</div>
+
+<!-- VIEW: neev_fln_admin_assessors -->
+<div id="view-neev_fln_admin_assessors" class="view-section flex-col h-full">
+
+<!-- TopAppBar -->
+<header class="fixed w-full top-0 z-50 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-sm h-[64px]">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">
+                    AD
+                </div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim hidden md:block">EduAssess Admin</h1>
+<h1 class="font-title-lg text-title-lg font-bold text-primary dark:text-primary-fixed-dim md:hidden">EduAssess Admin</h1>
+</div>
+<!-- Desktop Nav Cluster -->
+<nav class="hidden md:flex gap-lg h-full items-end">
+<a class="pb-sm text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim font-label-lg text-label-lg px-xs" href="#">Assessors</a>
+<a class="pb-sm text-on-surface-variant dark:text-on-surface-variant font-label-lg text-label-lg px-xs hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors rounded-t-DEFAULT" href="#">Schools</a>
+<a class="pb-sm text-on-surface-variant dark:text-on-surface-variant font-label-lg text-label-lg px-xs hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors rounded-t-DEFAULT" href="#">Students</a>
+<a class="pb-sm text-on-surface-variant dark:text-on-surface-variant font-label-lg text-label-lg px-xs hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors rounded-t-DEFAULT" href="#">Sync</a>
+</nav>
+<button aria-label="Settings" class="p-2 text-primary dark:text-primary-fixed-dim rounded-full hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+<!-- Mobile Tab Bar (Appears under TopAppBar) -->
+<div class="md:hidden flex w-full bg-surface-container-low px-margin-mobile h-[48px] items-end overflow-x-auto no-scrollbar border-b border-outline-variant">
+<a class="flex-1 text-center pb-2 text-primary border-b-2 border-primary font-label-lg text-label-lg whitespace-nowrap px-4" href="#">Assessors</a>
+<a class="flex-1 text-center pb-2 text-on-surface-variant font-label-lg text-label-lg whitespace-nowrap px-4 hover:bg-surface-container-high transition-colors rounded-t-DEFAULT" href="#">Schools</a>
+<a class="flex-1 text-center pb-2 text-on-surface-variant font-label-lg text-label-lg whitespace-nowrap px-4 hover:bg-surface-container-high transition-colors rounded-t-DEFAULT" href="#">Students</a>
+<a class="flex-1 text-center pb-2 text-on-surface-variant font-label-lg text-label-lg whitespace-nowrap px-4 hover:bg-surface-container-high transition-colors rounded-t-DEFAULT" href="#">Sync</a>
+</div>
+
+<div class="flex items-center gap-xs">
+    <select class="bg-surface border border-outline-variant text-on-surface text-sm rounded-full px-3 py-1 cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none" onchange="window.App.setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="hi">HI</option>
+        <option value="hinglish">HIN</option>
+    </select>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-4xl mx-auto px-margin-mobile md:px-gutter pt-xl flex flex-col gap-xl">
+<!-- Section Header -->
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface mb-xs">Manage Assessors</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Create and manage accounts for field assessors conducting FLN evaluations.</p>
+</div>
+<!-- Create Assessor Profile Card -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg md:p-xl transition-all ambient-shadow">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-lg">Create Assessor Profile</h3>
+<form class="flex flex-col gap-gutter">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Full Name Input -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant" for="fullName">Full Name</label>
+<input class="rounded-lg border border-outline-variant bg-transparent px-sm py-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container text-on-surface font-body-md text-body-md transition-colors placeholder:text-outline" id="fullName" placeholder="Enter full name" type="text"/>
+</div>
+<!-- Username/ID Input -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant" for="username">Username / ID</label>
+<input class="rounded-lg border border-outline-variant bg-transparent px-sm py-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container text-on-surface font-body-md text-body-md transition-colors placeholder:text-outline" id="username" placeholder="e.g. AS-1025" type="text"/>
+</div>
+</div>
+<!-- PIN Input -->
+<div class="flex flex-col gap-xs max-w-[200px]">
+<label class="font-label-md text-label-md text-on-surface-variant" for="pin">Access PIN (4-digits)</label>
+<input class="rounded-lg border border-outline-variant bg-transparent px-sm py-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container text-on-surface font-body-md text-body-md transition-colors text-center tracking-widest placeholder:tracking-normal placeholder:text-outline" id="pin" maxlength="4" placeholder="••••" type="password"/>
+</div>
+<div class="pt-sm border-t border-outline-variant mt-sm flex justify-end">
+<button class="bg-primary-container text-on-background font-label-lg text-label-lg px-xl py-sm rounded-full hover:brightness-95 transition-all active:scale-95 shadow-sm" type="button">
+                        Create Assessor
+                    </button>
+</div>
+</form>
+</section>
+<!-- Active Assessors List -->
+<section class="flex flex-col gap-md">
+<h3 class="font-title-md text-title-md text-on-surface-variant uppercase tracking-wider pl-xs">Active Assessors</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<!-- Assessor Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex items-center justify-between ambient-shadow transition-all cursor-pointer">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Amit Kumar</span>
+<span class="font-body-md text-body-md text-on-surface-variant">ID: AS-1024</span>
+</div>
+</div>
+<button aria-label="More options" class="p-2 text-outline hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<!-- Assessor Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex items-center justify-between ambient-shadow transition-all cursor-pointer">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Priya Sharma</span>
+<span class="font-body-md text-body-md text-on-surface-variant">ID: AS-1023</span>
+</div>
+</div>
+<button aria-label="More options" class="p-2 text-outline hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<!-- Assessor Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md flex items-center justify-between ambient-shadow transition-all cursor-pointer">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Rahul Singh</span>
+<span class="font-body-md text-body-md text-on-surface-variant">ID: AS-1022</span>
+</div>
+</div>
+<button aria-label="More options" class="p-2 text-outline hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-20 px-margin-mobile bg-surface-container dark:bg-surface-container-low z-50">
+<!-- Active Tab -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim w-16 hover:bg-surface-variant dark:hover:bg-on-surface-variant transition-all rounded-lg py-1 active:scale-90 duration-200" href="#">
+<div class="bg-primary-container dark:bg-on-primary-fixed-variant text-on-primary-container dark:text-primary-fixed rounded-full px-5 py-1 mb-1">
+<span class="material-symbols-outlined fill" data-icon="assignment_ind" data-weight="fill">assignment_ind</span>
+</div>
+<span class="font-label-md text-label-md">Assessors</span>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim w-16 hover:bg-surface-variant dark:hover:bg-on-surface-variant transition-all rounded-lg py-1 active:scale-90 duration-200" href="#">
+<div class="px-5 py-1 mb-1">
+<span class="material-symbols-outlined" data-icon="domain">domain</span>
+</div>
+<span class="font-label-md text-label-md">Schools</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim w-16 hover:bg-surface-variant dark:hover:bg-on-surface-variant transition-all rounded-lg py-1 active:scale-90 duration-200" href="#">
+<div class="px-5 py-1 mb-1">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+</div>
+<span class="font-label-md text-label-md">Students</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim w-16 hover:bg-surface-variant dark:hover:bg-on-surface-variant transition-all rounded-lg py-1 active:scale-90 duration-200" href="#">
+<div class="px-5 py-1 mb-1">
+<span class="material-symbols-outlined" data-icon="sync">sync</span>
+</div>
+<span class="font-label-md text-label-md">Sync</span>
+</a>
+</nav>
+
+</div>
+
+<!-- VIEW: neev_fln_register_new_school -->
+<div id="view-neev_fln_register_new_school" class="view-section flex-col h-full">
+
+
+    <!-- Top App Bar -->
+    <header class="bg-surface sticky top-0 z-10 w-full flex justify-between items-center px-margin-mobile py-sm border-b border-outline-variant md:px-margin-desktop md:py-md">
+        <div class="flex items-center gap-md">
+            <button aria-label="Go back" class="p-2 rounded-full hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                <span class="material-symbols-outlined text-on-surface" aria-hidden="true" data-icon="arrow_back" data-original-icon="arrow_back">circle</span>
+            </button>
+            <h1 class="font-title-lg text-title-lg text-on-surface">Register New School</h1>
+        </div>
+    
+<div class="flex items-center gap-xs">
+    <select class="bg-surface border border-outline-variant text-on-surface text-sm rounded-full px-3 py-1 cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none" onchange="window.App.setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="hi">HI</option>
+        <option value="hinglish">HIN</option>
+    </select>
+</div>
+</header>
+
+    <!-- Main Content Canvas -->
+    <main class="flex-grow flex flex-col justify-start px-margin-mobile py-lg w-full max-w-2xl mx-auto md:px-0">
+        
+        <form class="flex flex-col gap-lg bg-surface p-lg rounded-xl border border-outline-variant shadow-sm w-full">
+            
+            <div class="flex flex-col gap-base">
+                <p class="font-body-md text-body-md text-on-surface-variant">Enter school details below to add them to the assessment database.</p>
+            </div>
+
+            <!-- School Name Field -->
+            <div class="relative">
+                <label for="school-name" class="block font-label-md text-label-md text-on-surface mb-xs ml-1">School Name</label>
+                <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-sm text-outline pointer-events-none" aria-hidden="true" data-icon="school">school</span>
+                    <input type="text" id="school-name" name="school-name" placeholder="e.g. Govt. Primary School, HSR Layout" required="" class="w-full pl-[44px] pr-md py-sm bg-surface rounded-lg border border-outline-variant text-on-surface font-body-lg text-body-lg placeholder-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors">
+                </div>
+            </div>
+
+            <!-- UDISE Code Field -->
+            <div class="relative">
+                <label for="udise-code" class="block font-label-md text-label-md text-on-surface mb-xs ml-1">UDISE Code (Numeric ID)</label>
+                <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-sm text-outline pointer-events-none" aria-hidden="true" data-icon="pin">pin</span>
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" id="udise-code" name="udise-code" placeholder="11-digit code" required="" class="w-full pl-[44px] pr-md py-sm bg-surface rounded-lg border border-outline-variant text-on-surface font-body-lg text-body-lg placeholder-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors">
+                </div>
+            </div>
+
+            <!-- Cluster Field -->
+            <div class="relative">
+<label class="block font-label-md text-label-md text-on-surface mb-xs ml-1" for="school-category">School Category</label>
+<div class="relative flex items-center">
+<span aria-hidden="true" class="material-symbols-outlined absolute left-sm text-outline pointer-events-none" data-icon="category">category</span>
+<select class="w-full pl-[44px] pr-md py-sm bg-surface rounded-lg border border-outline-variant text-on-surface font-body-lg text-body-lg placeholder-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors appearance-none" id="school-category" name="school-category" required="">
+<option disabled="" selected="" value="">Tap to select category...</option>
+<option value="primary">Primary</option>
+<option value="upper-primary">Upper Primary</option>
+<option value="secondary">Secondary</option>
+<option value="higher-secondary">Higher Secondary</option>
+</select>
+<span aria-hidden="true" class="material-symbols-outlined absolute right-sm text-outline pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div><div class="relative">
+                <label for="cluster" class="block font-label-md text-label-md text-on-surface mb-xs ml-1">Cluster</label>
+                <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-sm text-outline pointer-events-none" aria-hidden="true" data-icon="account_tree" data-original-icon="account_tree">circle</span>
+                    <input type="text" id="cluster" name="cluster" placeholder="e.g. North Cluster" required="" class="w-full pl-[44px] pr-md py-sm bg-surface rounded-lg border border-outline-variant text-on-surface font-body-lg text-body-lg placeholder-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-lg w-full">
+                <!-- Block Field -->
+                <div class="relative w-full">
+                    <label for="block" class="block font-label-md text-label-md text-on-surface mb-xs ml-1">Block</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-sm text-outline pointer-events-none" aria-hidden="true" data-icon="location_city" data-original-icon="location_city">circle</span>
+                        <input type="text" id="block" name="block" placeholder="Enter Block" required="" class="w-full pl-[44px] pr-md py-sm bg-surface rounded-lg border border-outline-variant text-on-surface font-body-lg text-body-lg placeholder-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors">
+                    </div>
+                </div>
+
+                <!-- District Field -->
+                <div class="relative w-full">
+                    <label for="district" class="block font-label-md text-label-md text-on-surface mb-xs ml-1">District</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-sm text-outline pointer-events-none" aria-hidden="true" data-icon="map">map</span>
+                        <input type="text" id="district" name="district" placeholder="Enter District" required="" class="w-full pl-[44px] pr-md py-sm bg-surface rounded-lg border border-outline-variant text-on-surface font-body-lg text-body-lg placeholder-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Area -->
+            <div class="mt-lg pt-lg border-t border-outline-variant flex flex-col gap-md">
+                <button type="submit" class="w-full bg-primary-container text-on-primary-container font-title-md text-title-md py-sm px-lg rounded-full hover:bg-inverse-primary hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all flex items-center justify-center gap-sm">
+                    </button></div></form></main>
+</div>
+
+<!-- VIEW: neev_fln_register_student -->
+<div id="view-neev_fln_register_student" class="view-section flex-col h-full">
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface flex items-center px-margin-mobile h-16">
+<button class="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full active:opacity-80 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="ml-4 font-title-lg text-title-lg-mobile text-on-surface font-bold tracking-tight flex-1">Register Student</h1>
+
+<div class="flex items-center gap-xs">
+    <select class="bg-surface border border-outline-variant text-on-surface text-sm rounded-full px-3 py-1 cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none" onchange="window.App.setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="hi">HI</option>
+        <option value="hinglish">HIN</option>
+    </select>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 mt-16 px-margin-mobile py-xl space-y-xl pb-32">
+<!-- Registration Form Card -->
+<section class="bg-surface border border-outline-variant rounded-xl p-lg space-y-xl">
+<div class="space-y-md">
+<h2 class="font-title-md text-title-md text-on-surface">Student Details</h2>
+<div class="relative">
+<label class="absolute -top-2 left-2 bg-surface px-1 font-label-md text-label-md text-on-surface-variant" for="fullName">Full Name</label>
+<input class="w-full bg-transparent border border-outline-variant rounded-lg px-4 py-3 font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" id="fullName" placeholder="Enter full name" type="text"/>
+</div>
+<div class="relative">
+<label class="absolute -top-2 left-2 bg-surface px-1 font-label-md text-label-md text-on-surface-variant" for="rollNumber">Roll Number</label>
+<input class="w-full bg-transparent border border-outline-variant rounded-lg px-4 py-3 font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" id="rollNumber" placeholder="Enter roll number" type="text"/>
+</div>
+<div class="relative">
+<label class="absolute -top-2 left-2 bg-surface px-1 font-label-md text-label-md text-on-surface-variant" for="age">Age</label>
+<input class="w-full bg-transparent border border-outline-variant rounded-lg px-4 py-3 font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" id="age" placeholder="Enter age" type="number"/>
+</div>
+</div>
+<div class="space-y-md">
+<h3 class="font-label-lg text-label-lg text-on-surface-variant">Gender</h3>
+<div class="flex border border-outline-variant rounded-lg overflow-hidden divide-x divide-outline-variant">
+<button class="flex-1 py-2 bg-primary-container text-on-primary-container font-label-lg text-label-lg">Male</button>
+<button class="flex-1 py-2 bg-surface text-on-surface-variant font-label-lg text-label-lg">Female</button>
+<button class="flex-1 py-2 bg-surface text-on-surface-variant font-label-lg text-label-lg">Other</button>
+</div>
+</div>
+<div class="space-y-md">
+<h2 class="font-title-md text-title-md text-on-surface">Academic Details</h2>
+<div class="relative">
+<label class="absolute -top-2 left-2 bg-surface px-1 font-label-md text-label-md text-on-surface-variant" for="schoolSelect">Select School</label>
+<select class="w-full bg-transparent border border-outline-variant rounded-lg px-4 py-3 font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors appearance-none" id="schoolSelect">
+<option disabled="" selected="" value="">Select a school</option>
+<option value="school1">Springfield Elementary</option>
+<option value="school2">Shelbyville Middle</option>
+<option value="school3">Capital City High</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="arrow_drop_down">arrow_drop_down</span>
+</div>
+</div>
+<div class="space-y-md">
+<h3 class="font-label-lg text-label-lg text-on-surface-variant">Grade</h3>
+<div class="flex border border-outline-variant rounded-lg overflow-hidden divide-x divide-outline-variant">
+<button class="flex-1 py-2 bg-primary-container text-on-primary-container font-label-lg text-label-lg">Class 1</button>
+<button class="flex-1 py-2 bg-surface text-on-surface-variant font-label-lg text-label-lg">Class 2</button>
+<button class="flex-1 py-2 bg-surface text-on-surface-variant font-label-lg text-label-lg">Class 3</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Submit Button -->
+<button class="w-full bg-primary-container text-on-background py-4 rounded-full font-label-lg text-label-lg font-bold hover:shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2">
+            Register Student
+        </button>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container-low rounded-t-xl flex justify-around items-center h-20 px-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors w-16 h-16 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 hover:bg-surface-container-highest transition-colors active:scale-95 transition-transform h-14" href="#">
+<span class="material-symbols-outlined" data-icon="person_add" data-weight="fill" style="font-variation-settings: 'FILL' 1;">person_add</span>
+<span class="font-label-md text-label-md mt-1 font-bold">Register</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors w-16 h-16 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-label-md text-label-md mt-1">Schools</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors w-16 h-16 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md mt-1">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple segmented control interactivity
+        document.querySelectorAll('.divide-x').forEach(group => {
+            const buttons = group.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach(b => {
+                        b.classList.remove('bg-primary-container', 'text-on-primary-container');
+                        b.classList.add('bg-surface', 'text-on-surface-variant');
+                    });
+                    btn.classList.add('bg-primary-container', 'text-on-primary-container');
+                    btn.classList.remove('bg-surface', 'text-on-surface-variant');
+                });
+            });
+        });
+    </script>
+
+</div>
+
+    <!-- App Logic Scripts -->
+    <script src="db.js"></script>
+    <script src="grading.js"></script>
+    <script src="sync.js"></script>
+    <script src="speech.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

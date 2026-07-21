@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Welcome to Neev FLN</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#f9f9f9",
+                      "outline-variant": "#c1c7cf",
+                      "secondary-container": "#e2dfde",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "surface-container-low": "#f4f3f3",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e2e2e2",
+                      "surface-dim": "#dadada",
+                      "on-tertiary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-surface-variant": "#41474e",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-error": "#ffffff",
+                      "on-background": "#1a1c1c",
+                      "tertiary": "#5d5f5f",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "tertiary-fixed": "#e2e2e2",
+                      "on-primary-container": "#275b82",
+                      "on-tertiary-container": "#555757",
+                      "on-secondary-fixed": "#1b1c1c",
+                      "surface": "#f9f9f9",
+                      "tertiary-container": "#cdcdcd",
+                      "primary-fixed-dim": "#9bcbf8",
+                      "on-secondary-container": "#636262",
+                      "on-surface": "#1a1c1c",
+                      "on-primary-fixed": "#001d32",
+                      "primary-container": "#a2d2ff",
+                      "on-primary-fixed-variant": "#104a70",
+                      "surface-container": "#eeeeee",
+                      "outline": "#72787f",
+                      "surface-variant": "#e2e2e2",
+                      "secondary": "#5f5e5e",
+                      "on-error-container": "#93000a",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "inverse-primary": "#9bcbf8",
+                      "surface-tint": "#30628a",
+                      "inverse-on-surface": "#f1f1f1",
+                      "primary": "#30628a",
+                      "inverse-surface": "#2f3131",
+                      "primary-fixed": "#cde5ff",
+                      "background": "#f9f9f9",
+                      "on-secondary-fixed-variant": "#474746",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-high": "#e8e8e8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "xl": "32px",
+                      "xs": "4px",
+                      "sm": "12px",
+                      "base": "8px",
+                      "xxl": "48px",
+                      "md": "16px",
+                      "margin-mobile": "16px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Noto Sans"
+                      ],
+                      "body-md": [
+                              "Noto Sans"
+                      ],
+                      "title-md": [
+                              "Noto Sans"
+                      ],
+                      "label-md": [
+                              "Noto Sans"
+                      ],
+                      "label-lg": [
+                              "Noto Sans"
+                      ],
+                      "headline-lg": [
+                              "Noto Sans"
+                      ],
+                      "title-lg": [
+                              "Noto Sans"
+                      ],
+                      "body-lg": [
+                              "Noto Sans"
+                      ],
+                      "headline-lg-mobile": [
+                              "Noto Sans"
+                      ],
+                      "display-lg": [
+                              "Noto Sans"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.15px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.1px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "letterSpacing": "-0.25px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #FAFAFA;
+        }
+        
+        .onboarding-card {
+            border-radius: 24px;
+            border: 1px solid #E0E0E0;
+            background-color: #FAFAFA;
+            transition: all 0.3s ease;
+        }
+        
+        .onboarding-card:hover {
+            box-shadow: 0px 4px 12px rgba(33, 33, 33, 0.04);
+            border-color: #A2D2FF;
+            transform: translateY(-2px);
+        }
+        
+        .icon-container {
+            color: #212121;
+        }
+        
+        .onboarding-card:hover .icon-container {
+            color: #A2D2FF;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="h-full flex flex-col font-body-md text-on-background bg-background text-body-md">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-background dark:bg-background h-16 flex items-center justify-between px-margin-mobile z-40">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim cursor-pointer active:scale-95 transition-transform" data-icon="menu">menu</span>
+<span class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Neev FLN Assessor</span>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop py-xl overflow-y-auto">
+<div class="w-full max-w-md mx-auto text-center mb-xl">
+<div class="mb-sm text-primary">
+<span class="material-symbols-outlined" style="font-size: 48px;">school</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg mb-sm font-bold text-on-surface">Welcome to Neev FLN</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Foundational Literacy and Numeracy assessment made simple.</p>
+</div>
+<div class="w-full max-w-md mx-auto flex flex-col gap-sm">
+<!-- Card 1 -->
+<button class="onboarding-card w-full flex items-center p-lg gap-sm cursor-pointer group text-left">
+<div class="icon-container w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container transition-colors shrink-0">
+<span class="material-symbols-outlined text-2xl group-hover:text-on-primary-container" style="font-variation-settings: 'wght' 200;">play_arrow</span>
+</div>
+<div class="flex-1">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-xs">Explore with Demo Data</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Try out the features with sample student profiles.</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<!-- Card 2 -->
+<button class="onboarding-card w-full flex items-center p-lg gap-sm cursor-pointer group text-left">
+<div class="icon-container w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container transition-colors shrink-0">
+<span class="material-symbols-outlined text-2xl group-hover:text-on-primary-container" style="font-variation-settings: 'wght' 200;">settings</span>
+</div>
+<div class="flex-1">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-xs">Set up for my NGO</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Configure the app for your specific organizational needs.</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<!-- Card 3 -->
+<button class="onboarding-card w-full flex items-center p-lg gap-sm cursor-pointer group text-left">
+<div class="icon-container w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container transition-colors shrink-0">
+<span class="material-symbols-outlined text-2xl group-hover:text-on-primary-container" style="font-variation-settings: 'wght' 200;">upload_file</span>
+</div>
+<div class="flex-1">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-xs">Import NGO Configuration</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Load an existing configuration file.</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+</div>
+</main>
+</body></html>

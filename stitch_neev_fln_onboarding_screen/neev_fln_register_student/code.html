@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register Student</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "surface-container": "#eeeeee",
+                        "surface-tint": "#30628a",
+                        "on-primary-fixed": "#001d32",
+                        "secondary-container": "#e2dfde",
+                        "surface-container-low": "#f4f3f3",
+                        "surface": "#f9f9f9",
+                        "outline-variant": "#c1c7cf",
+                        "tertiary-fixed": "#e2e2e2",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "outline": "#72787f",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#5d5f5f",
+                        "tertiary-container": "#cdcdcd",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e8e8e8",
+                        "on-surface-variant": "#41474e",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-secondary-fixed-variant": "#474746",
+                        "primary-container": "#a2d2ff",
+                        "primary-fixed": "#cde5ff",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "background": "#f9f9f9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "surface-bright": "#f9f9f9",
+                        "secondary": "#5f5e5e",
+                        "secondary-fixed": "#e5e2e1",
+                        "primary": "#30628a",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#555757",
+                        "on-secondary-container": "#636262",
+                        "surface-dim": "#dadada",
+                        "inverse-primary": "#9bcbf8",
+                        "on-primary-container": "#275b82",
+                        "on-surface": "#1a1c1c",
+                        "on-background": "#1a1c1c",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-fixed-variant": "#104a70",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#9bcbf8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xxl": "48px",
+                        "margin-desktop": "64px",
+                        "xl": "32px",
+                        "sm": "12px",
+                        "xs": "4px",
+                        "base": "8px",
+                        "gutter": "24px",
+                        "lg": "24px",
+                        "margin-mobile": "16px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Noto Sans"],
+                        "headline-lg": ["Noto Sans"],
+                        "headline-lg-mobile": ["Noto Sans"],
+                        "title-lg": ["Noto Sans"],
+                        "title-md": ["Noto Sans"],
+                        "display-lg": ["Noto Sans"],
+                        "label-md": ["Noto Sans"],
+                        "body-md": ["Noto Sans"],
+                        "body-lg": ["Noto Sans"],
+                        "headline-md": ["Noto Sans"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Noto Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen text-on-background flex flex-col md:hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface flex items-center px-margin-mobile h-16">
+<button class="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-full active:opacity-80 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="ml-4 font-title-lg text-title-lg-mobile text-on-surface font-bold tracking-tight flex-1">Register Student</h1>
+</header>
+<!-- Main Content -->
+<main class="flex-1 mt-16 px-margin-mobile py-xl space-y-xl pb-32">
+<!-- Registration Form Card -->
+<section class="bg-surface border border-outline-variant rounded-xl p-lg space-y-xl">
+<div class="space-y-md">
+<h2 class="font-title-md text-title-md text-on-surface">Student Details</h2>
+<div class="relative">
+<label class="absolute -top-2 left-2 bg-surface px-1 font-label-md text-label-md text-on-surface-variant" for="fullName">Full Name</label>
+<input class="w-full bg-transparent border border-outline-variant rounded-lg px-4 py-3 font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" id="fullName" placeholder="Enter full name" type="text"/>
+</div>
+<div class="relative">
+<label class="absolute -top-2 left-2 bg-surface px-1 font-label-md text-label-md text-on-surface-variant" for="rollNumber">Roll Number</label>
+<input class="w-full bg-transparent border border-outline-variant rounded-lg px-4 py-3 font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" id="rollNumber" placeholder="Enter roll number" type="text"/>
+</div>
+<div class="relative">
+<label class="absolute -top-2 left-2 bg-surface px-1 font-label-md text-label-md text-on-surface-variant" for="age">Age</label>
+<input class="w-full bg-transparent border border-outline-variant rounded-lg px-4 py-3 font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" id="age" placeholder="Enter age" type="number"/>
+</div>
+</div>
+<div class="space-y-md">
+<h3 class="font-label-lg text-label-lg text-on-surface-variant">Gender</h3>
+<div class="flex border border-outline-variant rounded-lg overflow-hidden divide-x divide-outline-variant">
+<button class="flex-1 py-2 bg-primary-container text-on-primary-container font-label-lg text-label-lg">Male</button>
+<button class="flex-1 py-2 bg-surface text-on-surface-variant font-label-lg text-label-lg">Female</button>
+<button class="flex-1 py-2 bg-surface text-on-surface-variant font-label-lg text-label-lg">Other</button>
+</div>
+</div>
+<div class="space-y-md">
+<h2 class="font-title-md text-title-md text-on-surface">Academic Details</h2>
+<div class="relative">
+<label class="absolute -top-2 left-2 bg-surface px-1 font-label-md text-label-md text-on-surface-variant" for="schoolSelect">Select School</label>
+<select class="w-full bg-transparent border border-outline-variant rounded-lg px-4 py-3 font-body-lg text-body-lg text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors appearance-none" id="schoolSelect">
+<option disabled="" selected="" value="">Select a school</option>
+<option value="school1">Springfield Elementary</option>
+<option value="school2">Shelbyville Middle</option>
+<option value="school3">Capital City High</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="arrow_drop_down">arrow_drop_down</span>
+</div>
+</div>
+<div class="space-y-md">
+<h3 class="font-label-lg text-label-lg text-on-surface-variant">Grade</h3>
+<div class="flex border border-outline-variant rounded-lg overflow-hidden divide-x divide-outline-variant">
+<button class="flex-1 py-2 bg-primary-container text-on-primary-container font-label-lg text-label-lg">Class 1</button>
+<button class="flex-1 py-2 bg-surface text-on-surface-variant font-label-lg text-label-lg">Class 2</button>
+<button class="flex-1 py-2 bg-surface text-on-surface-variant font-label-lg text-label-lg">Class 3</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Submit Button -->
+<button class="w-full bg-primary-container text-on-background py-4 rounded-full font-label-lg text-label-lg font-bold hover:shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2">
+            Register Student
+        </button>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container-low rounded-t-xl flex justify-around items-center h-20 px-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors w-16 h-16 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 hover:bg-surface-container-highest transition-colors active:scale-95 transition-transform h-14" href="#">
+<span class="material-symbols-outlined" data-icon="person_add" data-weight="fill" style="font-variation-settings: 'FILL' 1;">person_add</span>
+<span class="font-label-md text-label-md mt-1 font-bold">Register</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors w-16 h-16 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-label-md text-label-md mt-1">Schools</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-highest transition-colors w-16 h-16 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md mt-1">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple segmented control interactivity
+        document.querySelectorAll('.divide-x').forEach(group => {
+            const buttons = group.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach(b => {
+                        b.classList.remove('bg-primary-container', 'text-on-primary-container');
+                        b.classList.add('bg-surface', 'text-on-surface-variant');
+                    });
+                    btn.classList.add('bg-primary-container', 'text-on-primary-container');
+                    btn.classList.remove('bg-surface', 'text-on-surface-variant');
+                });
+            });
+        });
+    </script>
+</body></html>
