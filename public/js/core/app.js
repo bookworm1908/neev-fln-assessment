@@ -146,16 +146,17 @@ let speechEngine = null;
 
 // --- Keypad and Login Logic ---
 let enteredPin = "";
-const pinDotsContainer = document.querySelector('#view-neev_fln_login div.flex.items-center.justify-center.gap-lg.my-lg');
+const pinDotsContainer = document.querySelector('#view-neev_fln_login main div.flex.items-center.justify-center');
 
 function updatePinDots() {
     if (!pinDotsContainer) return;
     const dots = pinDotsContainer.children;
     for (let i = 0; i < dots.length; i++) {
+        if (!dots[i].classList.contains('pin-dot')) continue;
         if (i < enteredPin.length) {
-            dots[i].className = "pin-dot w-4 h-4 rounded-full bg-primary border-2 border-primary transition-colors";
+            dots[i].className = "pin-dot w-3.5 h-3.5 rounded-full border-2 border-white bg-white transition-colors shadow-sm";
         } else {
-            dots[i].className = "pin-dot w-4 h-4 rounded-full border-2 border-outline-variant bg-surface transition-colors";
+            dots[i].className = "pin-dot w-3.5 h-3.5 rounded-full border-2 border-white/70 bg-transparent transition-colors shadow-sm";
         }
     }
 }
@@ -219,26 +220,76 @@ window.logout = function() {
 };
 
 function setupLoginKeypad() {
-    const buttons = document.querySelectorAll('#view-neev_fln_login footer button');
+    const buttons = document.querySelectorAll('#view-neev_fln_login footer .grid button');
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
             const val = btn.innerText.trim();
             if (val === 'Clear') {
                 enteredPin = "";
-            } else if (btn.querySelector('span') || val === '') { // backspace symbol
+            } else if (btn.querySelector('span') || val === 'backspace') { // backspace symbol
                 enteredPin = enteredPin.slice(0, -1);
             } else {
-                if (enteredPin.length < 4) {
+                if (enteredPin.length < 4 && val.length === 1 && !isNaN(val)) {
                     enteredPin += val;
                 }
             }
             updatePinDots();
-            if (enteredPin.length === 4) {
-                verifyLogin();
-            }
         });
     });
 }
+
+window.triggerManualLogin = function() {
+    if (enteredPin.length === 4) {
+        verifyLogin();
+    } else {
+        alert("Please enter your full 4-digit PIN.");
+    }
+};
+
+// --- Localization ---
+const translations = {
+    'en': {
+        'selectAssessor': 'Select Assessor Name',
+        'tapToChoose': 'Tap to choose...',
+        'clear': 'Clear',
+        'logIn': 'Log In'
+    },
+    'hi': {
+        'selectAssessor': 'मूल्यांकनकर्ता का नाम चुनें',
+        'tapToChoose': 'चुनने के लिए टैप करें...',
+        'clear': 'साफ़ करें',
+        'logIn': 'लॉग इन'
+    },
+    'hi_en': {
+        'selectAssessor': 'Assessor Name select karein',
+        'tapToChoose': 'Choose karne ke liye tap karein...',
+        'clear': 'Clear karein',
+        'logIn': 'Log In'
+    }
+};
+
+window.switchLanguage = function(lang) {
+    if (!translations[lang]) return;
+    
+    // Update active button state
+    const buttons = document.querySelectorAll('.lang-btn');
+    buttons.forEach(btn => {
+        if (btn.dataset.lang === lang) {
+            btn.className = 'lang-btn px-4 py-1.5 rounded-full bg-teal-500 text-white text-sm font-medium shadow-sm transition-all';
+        } else {
+            btn.className = 'lang-btn px-4 py-1.5 rounded-full text-white hover:bg-white/20 text-sm font-medium transition-all';
+        }
+    });
+
+    // Update text content
+    const dict = translations[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+            el.innerText = dict[key];
+        }
+    });
+};
 
 // --- Onboarding Wireup ---
 function setupOnboarding() {
@@ -752,12 +803,18 @@ async function initApp() {
             defaultOpt.selected = true;
             defaultOpt.value = '';
             defaultOpt.textContent = 'Tap to choose...';
+            defaultOpt.className = 'text-gray-900 bg-white';
+            defaultOpt.style.color = '#111827';
+            defaultOpt.style.backgroundColor = '#ffffff';
             select.appendChild(defaultOpt);
             
             assessors.forEach(a => {
                 const opt = document.createElement('option');
                 opt.value = a.id;
                 opt.textContent = a.username;
+                opt.className = 'text-gray-900 bg-white';
+                opt.style.color = '#111827';
+                opt.style.backgroundColor = '#ffffff';
                 select.appendChild(opt);
             });
         }

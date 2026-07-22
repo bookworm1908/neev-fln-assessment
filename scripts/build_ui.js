@@ -24,6 +24,8 @@ let mainHtml = `<!DOCTYPE html>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <meta name="theme-color" content="#30628a" />
     <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" href="assets/images/neev_logo.png" />
+    <link rel="apple-touch-icon" href="assets/images/neev_logo.png" />
     <title>Neev FLN Assessor</title>
     
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
