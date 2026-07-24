@@ -111,9 +111,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-height: 720px) {
-  .neev-tagline {
-    display: none !important;
-  }
   .hero-panel {
     padding-top: 0.75rem !important;
     padding-bottom: 0.75rem !important;
