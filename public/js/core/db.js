@@ -4,7 +4,7 @@
  */
 
 const DB_NAME = "NeevFLNDB";
-const DB_VERSION = 1;
+const DB_VERSION = 4;
 
 let dbInstance = null;
 let activeSessionKey = null; // Volatile memory storage for derived AES key
@@ -118,45 +118,152 @@ export const DB = {
 
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
+                const transaction = event.target.transaction;
 
-                // Create Config Store
+                // Config Store
                 if (!db.objectStoreNames.contains('config')) {
                     db.createObjectStore('config', { keyPath: 'key' });
                 }
 
-                // Create Assessors Store
-                if (!db.objectStoreNames.contains('assessors')) {
-                    const assessorStore = db.createObjectStore('assessors', { keyPath: 'id' });
-                    assessorStore.createIndex('username', 'username', { unique: true });
+                // Funders Store [NEW]
+                let funderStore;
+                if (!db.objectStoreNames.contains('funders')) {
+                    funderStore = db.createObjectStore('funders', { keyPath: 'id' });
+                } else {
+                    funderStore = transaction.objectStore('funders');
+                }
+                if (!funderStore.indexNames.contains('name')) {
+                    funderStore.createIndex('name', 'name', { unique: false });
                 }
 
-                // Create Schools Store
+                // Projects Store [NEW]
+                let projectStore;
+                if (!db.objectStoreNames.contains('projects')) {
+                    projectStore = db.createObjectStore('projects', { keyPath: 'id' });
+                } else {
+                    projectStore = transaction.objectStore('projects');
+                }
+                if (!projectStore.indexNames.contains('name')) {
+                    projectStore.createIndex('name', 'name', { unique: false });
+                }
+                if (!projectStore.indexNames.contains('status')) {
+                    projectStore.createIndex('status', 'status', { unique: false });
+                }
+
+                // Assessors Store
+                let assessorStore;
+                if (!db.objectStoreNames.contains('assessors')) {
+                    assessorStore = db.createObjectStore('assessors', { keyPath: 'id' });
+                } else {
+                    assessorStore = transaction.objectStore('assessors');
+                }
+                if (!assessorStore.indexNames.contains('username')) {
+                    assessorStore.createIndex('username', 'username', { unique: false });
+                }
+                if (!assessorStore.indexNames.contains('teamLeaderId')) {
+                    assessorStore.createIndex('teamLeaderId', 'teamLeaderId', { unique: false });
+                }
+                if (!assessorStore.indexNames.contains('funderId')) {
+                    assessorStore.createIndex('funderId', 'funderId', { unique: false });
+                }
+
+                // Clusters Store [NEW]
+                let clusterStore;
+                if (!db.objectStoreNames.contains('clusters')) {
+                    clusterStore = db.createObjectStore('clusters', { keyPath: 'id' });
+                } else {
+                    clusterStore = transaction.objectStore('clusters');
+                }
+                if (!clusterStore.indexNames.contains('district')) {
+                    clusterStore.createIndex('district', 'district', { unique: false });
+                }
+                if (!clusterStore.indexNames.contains('block')) {
+                    clusterStore.createIndex('block', 'block', { unique: false });
+                }
+                if (!clusterStore.indexNames.contains('teamLeaderId')) {
+                    clusterStore.createIndex('teamLeaderId', 'teamLeaderId', { unique: false });
+                }
+
+                // Schools Store
+                let schoolStore;
                 if (!db.objectStoreNames.contains('schools')) {
-                    const schoolStore = db.createObjectStore('schools', { keyPath: 'id' });
+                    schoolStore = db.createObjectStore('schools', { keyPath: 'id' });
+                } else {
+                    schoolStore = transaction.objectStore('schools');
+                }
+                if (!schoolStore.indexNames.contains('district')) {
                     schoolStore.createIndex('district', 'district', { unique: false });
+                }
+                if (!schoolStore.indexNames.contains('block')) {
                     schoolStore.createIndex('block', 'block', { unique: false });
                 }
-
-                // Create Students Store
-                if (!db.objectStoreNames.contains('students')) {
-                    const studentStore = db.createObjectStore('students', { keyPath: 'id' });
-                    studentStore.createIndex('schoolId', 'schoolId', { unique: false });
-                    studentStore.createIndex('grade', 'grade', { unique: false });
+                if (!schoolStore.indexNames.contains('teamLeaderId')) {
+                    schoolStore.createIndex('teamLeaderId', 'teamLeaderId', { unique: false });
+                }
+                if (!schoolStore.indexNames.contains('projectId')) {
+                    schoolStore.createIndex('projectId', 'projectId', { unique: false });
+                }
+                if (!schoolStore.indexNames.contains('clusterId')) {
+                    schoolStore.createIndex('clusterId', 'clusterId', { unique: false });
                 }
 
-                // Create Passages Store
+                // Students Store
+                let studentStore;
+                if (!db.objectStoreNames.contains('students')) {
+                    studentStore = db.createObjectStore('students', { keyPath: 'id' });
+                } else {
+                    studentStore = transaction.objectStore('students');
+                }
+                if (!studentStore.indexNames.contains('schoolId')) {
+                    studentStore.createIndex('schoolId', 'schoolId', { unique: false });
+                }
+                if (!studentStore.indexNames.contains('projectId')) {
+                    studentStore.createIndex('projectId', 'projectId', { unique: false });
+                }
+                if (!studentStore.indexNames.contains('funderId')) {
+                    studentStore.createIndex('funderId', 'funderId', { unique: false });
+                }
+                if (!studentStore.indexNames.contains('clusterId')) {
+                    studentStore.createIndex('clusterId', 'clusterId', { unique: false });
+                }
+                if (!studentStore.indexNames.contains('grade')) {
+                    studentStore.createIndex('grade', 'grade', { unique: false });
+                }
+                if (!studentStore.indexNames.contains('academicYear')) {
+                    studentStore.createIndex('academicYear', 'academicYear', { unique: false });
+                }
+
+                // Passages Store
                 if (!db.objectStoreNames.contains('passages')) {
                     const passageStore = db.createObjectStore('passages', { keyPath: 'id' });
                     passageStore.createIndex('tier', 'tier', { unique: false });
                     passageStore.createIndex('language', 'language', { unique: false });
                 }
 
-                // Create Assessments Store
+                // Assessments Store
+                let assessmentStore;
                 if (!db.objectStoreNames.contains('assessments')) {
-                    const assessmentStore = db.createObjectStore('assessments', { keyPath: 'id' });
+                    assessmentStore = db.createObjectStore('assessments', { keyPath: 'id' });
+                } else {
+                    assessmentStore = transaction.objectStore('assessments');
+                }
+                if (!assessmentStore.indexNames.contains('synced')) {
                     assessmentStore.createIndex('synced', 'synced', { unique: false });
+                }
+                if (!assessmentStore.indexNames.contains('studentId')) {
                     assessmentStore.createIndex('studentId', 'studentId', { unique: false });
+                }
+                if (!assessmentStore.indexNames.contains('clusterId')) {
+                    assessmentStore.createIndex('clusterId', 'clusterId', { unique: false });
+                }
+                if (!assessmentStore.indexNames.contains('timestampStart')) {
                     assessmentStore.createIndex('timestampStart', 'timestampStart', { unique: false });
+                }
+                if (!assessmentStore.indexNames.contains('academicYear')) {
+                    assessmentStore.createIndex('academicYear', 'academicYear', { unique: false });
+                }
+                if (!assessmentStore.indexNames.contains('term')) {
+                    assessmentStore.createIndex('term', 'term', { unique: false });
                 }
             };
 

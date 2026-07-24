@@ -1,41 +1,213 @@
-<body class="h-full flex flex-col font-body-md text-on-background bg-background text-body-md">
-<!-- TopAppBar -->
-<header class="w-full top-0 sticky bg-primary dark:bg-primary h-16 flex items-center justify-between px-margin-mobile z-40 text-on-primary">
-    <div class="flex items-center gap-4">
-        <span class="material-symbols-outlined cursor-pointer active:scale-95 transition-transform" onclick="logout()" data-icon="logout">logout</span>
-        <span class="font-title-lg text-title-lg font-bold tracking-tight">School Admin Dashboard</span>
+<body class="h-full flex flex-col font-body-md text-on-background bg-slate-50 text-body-md antialiased">
+  <!-- Top Navigation Bar -->
+  <header class="w-full top-0 sticky bg-slate-900/90 backdrop-blur-md text-white h-16 flex items-center justify-between px-4 md:px-8 border-b border-slate-700/50 z-50 shadow-md">
+    <div class="flex items-center gap-3">
+      <img src="assets/images/neev_logo.png" alt="NEEV" class="h-9 w-auto object-contain" />
+      <span class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+        NEEV <span class="text-xs bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-full border border-teal-500/40 font-mono">Team Leader</span>
+      </span>
     </div>
-</header>
-<main class="flex-1 overflow-y-auto px-margin-mobile py-md flex flex-col gap-md">
-    <!-- School Health Matrix -->
-    <section class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
-        <h2 class="font-title-md text-title-md text-primary mb-sm">School FLN Health</h2>
-        <div class="flex gap-4 items-end">
-            <div class="flex-1 bg-[#d4edda] p-sm rounded-lg text-center">
-                <p class="font-title-lg text-title-lg text-[#155724]">65%</p>
-                <p class="text-xs text-[#155724]">On Track</p>
-            </div>
-            <div class="flex-1 bg-error-container p-sm rounded-lg text-center bg-opacity-30 border border-error">
-                <p class="font-title-lg text-title-lg text-error">35%</p>
-                <p class="text-xs text-error">Needs Help</p>
-            </div>
-        </div>
-    </section>
+    <div class="flex items-center gap-3">
+      <button onclick="window.logout()" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/20 transition-all active:scale-95 flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">logout</span> Logout
+      </button>
+    </div>
+  </header>
 
-    <!-- Assessor Activity Feed -->
-    <section class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
-        <h2 class="font-title-md text-title-md text-primary mb-sm">Teacher Activity (Today)</h2>
-        <ul class="flex flex-col gap-2">
-            <li class="flex justify-between items-center py-2 border-b border-surface-container">
-                <span class="font-label-lg">Neha Patel</span>
-                <span class="text-sm text-on-surface-variant">15 assessments</span>
+  <!-- Main Content Canvas -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 space-y-6 overflow-y-auto">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-teal-700 via-slate-800 to-slate-900 text-white rounded-3xl p-6 shadow-xl border border-teal-500/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-400/10 border border-teal-400/30 text-teal-300 text-xs font-medium mb-3">
+          <span class="material-symbols-outlined text-sm">badge</span> Team Leader Operations
+        </div>
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight mb-1">Kanpur Cluster Control Panel</h1>
+        <p class="text-xs md:text-sm text-slate-300">Manage field assessor teams, school rosters, and issue PIN resets.</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="document.getElementById('modal-onboard-school').classList.remove('hidden')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs shadow-md transition-all flex items-center gap-2 active:scale-95">
+          <span class="material-symbols-outlined text-sm">domain_add</span> + Onboard School
+        </button>
+        <button onclick="document.getElementById('modal-onboard-student').classList.remove('hidden')" class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-medium text-xs shadow-md transition-all flex items-center gap-2 active:scale-95">
+          <span class="material-symbols-outlined text-sm">person_add</span> + Add New Student
+        </button>
+      </div>
+    </div>
+
+    <!-- 3 Operations Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Card 1: Assessor Team Management -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-slate-800 text-base">Assessor Team Roster</h3>
+            <span class="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">group</span>
+            </span>
+          </div>
+          <ul class="space-y-2.5 text-xs text-slate-600 divide-y divide-slate-100">
+            <li class="pt-2 flex justify-between items-center">
+              <div>
+                <p class="font-bold text-slate-800">Priya Sharma</p>
+                <p class="text-[11px] text-slate-400">Assigned: Kanpur Primary</p>
+              </div>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-semibold">Active</span>
             </li>
-            <li class="flex justify-between items-center py-2 border-b border-surface-container">
-                <span class="font-label-lg">Rohan Sharma</span>
-                <span class="text-sm text-error">0 assessments</span>
+            <li class="pt-2 flex justify-between items-center">
+              <div>
+                <p class="font-bold text-slate-800">Ravi Patel</p>
+                <p class="text-[11px] text-slate-400">Assigned: Etasha Center</p>
+              </div>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-semibold">Active</span>
             </li>
-        </ul>
-        <button class="mt-sm w-full py-2 bg-primary-container text-on-primary-container rounded-full font-label-lg shadow-sm">Manage Teachers</button>
-    </section>
-</main>
+          </ul>
+        </div>
+        <button onclick="alert('Reassigning field assessor team...')" class="mt-4 w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-xl transition-colors">
+          Manage Team Assignments
+        </button>
+      </div>
+
+      <!-- Card 2: Field 6-Digit PIN Reset Tool -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-slate-800 text-base">Issue Field PIN Reset</h3>
+            <span class="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">key</span>
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 mb-3">Generate a temporary 6-digit PIN reset code for an assessor in the field.</p>
+          <div class="space-y-2">
+            <input type="text" placeholder="Assessor User ID (e.g. assessor1)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:border-teal-500" />
+            <button onclick="alert('Temporary 6-Digit PIN reset generated: 123456')" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-white font-medium text-xs rounded-xl transition-colors shadow-sm">
+              Generate Reset PIN
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Student Transfer Protocol -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-slate-800 text-base">Student Mid-Year Transfer</h3>
+            <span class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">move_up</span>
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 mb-3">Claim a migrant student's historical FLN record from another school center.</p>
+          <div class="space-y-2">
+            <input type="text" placeholder="Student ID / Roll No" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none focus:border-teal-500" />
+            <button onclick="alert('Searching student record across centers...')" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs rounded-xl transition-colors shadow-sm">
+              Search & Transfer Student
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal 3: Onboard School Solid Card -->
+  <div id="modal-onboard-school" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-md space-y-4 text-slate-900">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-bold text-base text-slate-800">Onboard New School / Center</h3>
+        <button onclick="document.getElementById('modal-onboard-school').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <form onsubmit="event.preventDefault(); window.saveSchool(this);" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">School / Center Name</label>
+          <input type="text" name="schoolName" required placeholder="e.g. Govt. Primary School Kalyanpur" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-teal-500" />
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Select Project</label>
+          <select name="projectId" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-teal-500">
+            <option value="proj_utkarsh">Project Utkarsh - Kanpur Drive</option>
+            <option value="proj_buniyaad">Project Buniyaad - Delhi Center</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">District</label>
+            <input type="text" name="district" required placeholder="e.g. Kanpur Nagar" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
+          </div>
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">Block / Area</label>
+            <input type="text" name="block" placeholder="e.g. Kalyanpur" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
+          </div>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="document.getElementById('modal-onboard-school').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium shadow-sm">Save School</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Onboard Student Solid Card (Extended with DOB & Mother Tongue) -->
+  <div id="modal-onboard-student" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-md space-y-4 text-slate-900">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-bold text-base text-slate-800">Onboard New Student</h3>
+        <button onclick="document.getElementById('modal-onboard-student').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <form onsubmit="event.preventDefault(); window.saveStudent(this);" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Student Full Name</label>
+          <input type="text" name="studentName" required placeholder="e.g. Rohan Sharma" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-teal-500" />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">Roll Number</label>
+            <input type="text" name="rollNumber" required placeholder="101" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
+          </div>
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">Gender</label>
+            <select name="gender" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none">
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+              <option value="O">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">Date of Birth</label>
+            <input type="date" name="dob" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
+          </div>
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">Mother Tongue</label>
+            <select name="motherTongue" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none">
+              <option value="Hindi">Hindi</option>
+              <option value="Awadhi">Awadhi</option>
+              <option value="Bhojpuri">Bhojpuri</option>
+              <option value="Marathi">Marathi</option>
+              <option value="Bengali">Bengali</option>
+              <option value="English">English</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Allocate Grant Funder</label>
+          <select name="funderId" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-teal-500">
+            <option value="funder_hcl">HCL Foundation Grant</option>
+            <option value="funder_giveindia">GiveIndia Grant</option>
+            <option value="">Unallocated (General Pool)</option>
+          </select>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="document.getElementById('modal-onboard-student').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium shadow-sm">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </body>

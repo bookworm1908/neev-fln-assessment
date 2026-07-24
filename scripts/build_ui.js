@@ -11,10 +11,10 @@ const views = [
   'neev_fln_numeracy_assessment',
   'neev_fln_assessment_results',
   'neev_fln_admin_assessors',
-  'neev_fln_register_new_school',
   'neev_fln_register_student',
   'neev_fln_school_admin_dashboard',
-  'neev_fln_super_admin_dashboard'
+  'neev_fln_super_admin_dashboard',
+  'neev_fln_stakeholder_dashboard'
 ];
 
 let mainHtml = `<!DOCTYPE html>
@@ -55,11 +55,24 @@ for (let view of views) {
             }
         }
         
-        // Extract content between <body ...> and </body>
-        const bodyMatch = content.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        // Extract content between <body ...> and the last </body>
+        let viewContent = "";
+        const bodyMatch = content.match(/<body[^>]*>([\s\S]*)<\/body>/i);
         if (bodyMatch && bodyMatch[1]) {
-            mainHtml += `\n<!-- VIEW: ${view} -->\n<div id="view-${view}" class="view-section flex-col h-full">\n${bodyMatch[1]}\n</div>\n`;
+            viewContent = bodyMatch[1].trim();
+        } else {
+            // Fallback: strip html/head/body tags
+            viewContent = content
+                .replace(/<!DOCTYPE[^>]*>/gi, '')
+                .replace(/<html[^>]*>/gi, '')
+                .replace(/<\/html>/gi, '')
+                .replace(/<head[\s\S]*?<\/head>/gi, '')
+                .replace(/<body[^>]*>/gi, '')
+                .replace(/<\/body>/gi, '')
+                .trim();
         }
+
+        mainHtml += `\n<!-- VIEW: ${view} -->\n<div id="view-${view}" class="view-section flex-col h-full">\n${viewContent}\n</div>\n`;
     }
 }
 

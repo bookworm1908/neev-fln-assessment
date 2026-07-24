@@ -177,6 +177,11 @@
       <!-- Right Login Panel -->
       <div class="login-panel flex-1 flex flex-col items-center justify-center p-5 sm:p-6 bg-white/20 backdrop-blur-xl relative z-10 pb-10">
         
+        <!-- Back to Onboarding Top Link -->
+        <button onclick="showView('view-neev_fln_onboarding')" class="absolute top-4 left-4 text-white/80 hover:text-white flex items-center gap-1.5 text-xs font-medium bg-white/10 hover:bg-white/20 px-3.5 py-1.5 rounded-full border border-white/20 backdrop-blur-md transition-all active:scale-95 z-20 shadow-sm">
+          <span class="material-symbols-outlined text-base">arrow_back</span> <span data-i18n="onboarding">Onboarding</span>
+        </button>
+
         <!-- Language Selector -->
         <div class="lang-selector-box w-full flex justify-end mb-5">
           <div class="flex bg-white/20 rounded-full p-1 border border-white/30 backdrop-blur-sm" id="language-selector">
@@ -186,25 +191,36 @@
           </div>
         </div>
 
-        <main class="main-login-box w-full max-w-[270px] flex flex-col items-center justify-center gap-5 mt-1">
-          <!-- Profile Picker Card -->
-          <div class="w-full relative">
-            <label class="block font-medium text-xs text-white/90 mb-1.5 ml-1" for="assessor-select" data-i18n="selectAssessor">Select Assessor Name</label>
-            <div class="relative">
-              <select class="w-full appearance-none bg-white/10 border border-white/40 rounded-full py-2.5 pl-4 pr-10 text-sm text-white focus:border-white focus:ring-1 focus:ring-white transition-colors cursor-pointer outline-none backdrop-blur-md" id="assessor-select">
-                <option disabled="" selected="" value="" class="text-gray-900 bg-white" data-i18n="tapToChoose">Tap to choose...</option>
-                <option value="1" class="text-gray-900 bg-white">Aisha Sharma</option>
-                <option value="2" class="text-gray-900 bg-white">Ravi Patel</option>
-                <option value="3" class="text-gray-900 bg-white">Priya Desai</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
-                <span class="material-symbols-outlined text-white/80 text-xl">expand_more</span>
+        <main class="main-login-box w-full max-w-[270px] flex flex-col items-center justify-center gap-4 mt-1">
+          
+          <!-- Active Remember Me Profile Card (Hidden by default, shown when user is cached) -->
+          <div id="remember-me-card" class="hidden w-full bg-white/15 border border-white/30 backdrop-blur-md rounded-2xl p-3.5 flex items-center justify-between shadow-md">
+            <div class="flex items-center gap-3 overflow-hidden">
+              <div class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0" id="remember-avatar">U</div>
+              <div class="truncate">
+                <p class="text-xs text-white/70 font-medium leading-none mb-1">Welcome Back</p>
+                <h4 class="text-sm font-bold text-white truncate" id="remember-name">User Name</h4>
+                <p class="text-[11px] text-teal-300 font-mono" id="remember-userid">@userid</p>
+              </div>
+            </div>
+            <button onclick="switchUserAccount()" class="text-xs text-white/80 hover:text-white underline text-right shrink-0 ml-2">Switch</button>
+          </div>
+
+          <!-- User ID Input Field (Shown when no active profile cached) -->
+          <div id="userid-input-container" class="w-full relative">
+            <label class="block font-medium text-xs text-white/90 mb-1.5 ml-1" for="user-id-input">User ID / Staff ID</label>
+            <div class="relative flex items-center">
+              <input type="text" id="user-id-input" placeholder="e.g. superadmin, teamlead" class="w-full bg-white/10 border border-white/40 rounded-full py-2.5 pl-4 pr-10 text-sm text-white placeholder-white/50 focus:border-white focus:ring-1 focus:ring-white transition-colors outline-none backdrop-blur-md" autocomplete="username" />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-white/70">
+                <span class="material-symbols-outlined text-lg">person</span>
               </div>
             </div>
           </div>
 
-          <!-- PIN Entry Dots -->
-          <div class="flex items-center justify-center gap-3 my-1">
+          <!-- 6-Digit PIN Entry Dots -->
+          <div class="flex items-center justify-center gap-2.5 my-1">
+            <div class="pin-dot w-3 h-3 rounded-full border-2 border-white/70 bg-transparent transition-colors shadow-sm"></div>
+            <div class="pin-dot w-3 h-3 rounded-full border-2 border-white/70 bg-transparent transition-colors shadow-sm"></div>
             <div class="pin-dot w-3 h-3 rounded-full border-2 border-white/70 bg-transparent transition-colors shadow-sm"></div>
             <div class="pin-dot w-3 h-3 rounded-full border-2 border-white/70 bg-transparent transition-colors shadow-sm"></div>
             <div class="pin-dot w-3 h-3 rounded-full border-2 border-white/70 bg-transparent transition-colors shadow-sm"></div>

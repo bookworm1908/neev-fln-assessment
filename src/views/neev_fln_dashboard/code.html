@@ -228,114 +228,112 @@
     }
   </style>
   </head>
-<body class="bg-surface text-on-surface font-sans antialiased min-h-screen flex flex-col pb-24">
-<!-- TopAppBar -->
-<header class="w-full top-0 sticky bg-primary dark:bg-primary h-16 flex items-center justify-between px-margin-mobile z-50 text-on-primary shadow-sm">
-    <div class="flex items-center gap-4">
-        <span class="material-symbols-outlined cursor-pointer active:scale-95 transition-transform" onclick="logout()" data-icon="logout">logout</span>
-        <span class="font-title-lg text-title-lg font-bold tracking-tight">Neev FLN Assessor</span>
+<body class="h-full flex flex-col font-body-md text-on-background bg-slate-50 text-body-md antialiased min-h-screen">
+  <!-- Top Navigation Bar -->
+  <header class="w-full top-0 sticky bg-slate-900/90 backdrop-blur-md text-white h-16 flex items-center justify-between px-4 md:px-8 border-b border-slate-700/50 z-50 shadow-md">
+    <div class="flex items-center gap-3">
+      <img src="assets/images/neev_logo.png" alt="NEEV" class="h-9 w-auto object-contain" />
+      <span class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+        NEEV <span class="text-xs bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-full border border-teal-500/40 font-mono">Field Assessor</span>
+      </span>
     </div>
-    <button class="p-2 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors">
-        <span class="material-symbols-outlined" data-icon="sync">sync</span>
-    </button>
-</header>
-<!-- Status Bar -->
-<div class="bg-surface-container-low px-margin-mobile py-sm flex justify-between items-center text-label-md font-label-md text-on-surface-variant border-b border-surface-container">
-<div class="flex items-center gap-xs">
-<span class="w-2 h-2 rounded-full bg-success"></span>
-<span>Online</span>
-</div>
-<div class="flex items-center gap-xs">
-<span class="material-symbols-outlined text-[16px]" data-icon="cloud_sync">cloud_sync</span>
-<span>3 Pending Syncs</span>
-</div>
-</div>
-<!-- Main Content Canvas -->
-<main class="flex-grow px-margin-mobile pt-lg pb-xl flex flex-col gap-xl">
-<!-- Module Selection Segmented Control -->
-<section class="flex bg-surface-container p-1 rounded-full w-full mx-auto max-w-md">
-<button class="flex-1 py-sm px-md rounded-full bg-primary-container text-on-primary-container font-label-lg text-label-lg transition-colors shadow-sm text-center">
-                Literacy (Hindi/English)
-            </button>
-<button class="flex-1 py-sm px-md rounded-full text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-highest transition-colors text-center">
-                Numeracy
-            </button>
-</section>
-<!-- Selection Form (Card Style) -->
-<section class="bg-surface rounded-2xl border border-surface-container-highest p-lg shadow-sm flex flex-col gap-lg w-full max-w-md mx-auto">
-<h2 class="font-title-md text-title-md text-on-surface">Assessment Setup</h2>
-<div class="flex flex-col gap-md">
-<!-- Select District -->
-<div class="relative">
-<label class="absolute -top-2 left-3 bg-surface px-1 text-label-md font-label-md text-on-surface-variant z-10" for="district">Select District</label>
-<select class="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-body-lg font-body-lg text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors" id="district">
-<option disabled="" selected="" value="">Choose a district...</option>
-<option value="d1">District Alpha</option>
-<option value="d2">District Beta</option>
-</select>
-</div>
-<!-- Select School -->
-<div class="relative mt-2">
-<label class="absolute -top-2 left-3 bg-surface px-1 text-label-md font-label-md text-on-surface-variant z-10" for="school">Select School</label>
-<select class="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-body-lg font-body-lg text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors" id="school">
-<option disabled="" selected="" value="">Choose a school...</option>
-<option value="s1">Govt. Primary School 1</option>
-<option value="s2">Govt. Primary School 2</option>
-</select>
-</div>
-<!-- Select Grade -->
-<div class="relative mt-2">
-<label class="absolute -top-2 left-3 bg-surface px-1 text-label-md font-label-md text-on-surface-variant z-10" for="grade">Select Grade</label>
-<select class="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-body-lg font-body-lg text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors" id="grade">
-<option disabled="" selected="" value="">Choose a grade...</option>
-<option value="g1">Grade 1</option>
-<option value="g2">Grade 2</option>
-<option value="g3">Grade 3</option>
-</select>
-</div>
-<!-- Select Student -->
-<div class="relative mt-2">
-<label class="absolute -top-2 left-3 bg-surface px-1 text-label-md font-label-md text-on-surface-variant z-10" for="student">Select Student</label>
-<select class="w-full bg-surface border border-outline-variant rounded-lg px-md py-sm text-body-lg font-body-lg text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors" id="student">
-<option disabled="" selected="" value="">Choose a student...</option>
-<option value="st1">Aarav Patel</option>
-<option value="st2">Diya Sharma</option>
-<option value="st3">Rohan Kumar</option>
-</select>
-</div>
-</div>
-</section>
-</main>
-<!-- Fixed Bottom Action Area -->
-<div class="fixed bottom-20 left-0 right-0 p-margin-mobile bg-gradient-to-t from-surface via-surface to-transparent z-40 md:hidden flex justify-center">
-<button class="w-full max-w-md bg-success hover:bg-emerald-500 text-on-success font-title-md text-title-md py-md rounded-full shadow-sm transition-transform active:scale-95 flex items-center justify-center gap-sm">
-<span class="material-symbols-outlined" data-icon="play_arrow">play_arrow</span>
-            Start Assessment Session
+    <div class="flex items-center gap-3">
+      <button onclick="window.logout()" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/20 transition-all active:scale-95 flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">logout</span> Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Canvas -->
+  <main class="flex-1 max-w-5xl w-full mx-auto p-4 md:p-8 space-y-6 overflow-y-auto pb-24">
+    
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-teal-800 via-slate-800 to-slate-900 text-white rounded-3xl p-6 shadow-xl border border-teal-500/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-400/10 border border-teal-400/30 text-teal-300 text-xs font-medium mb-3">
+          <span class="material-symbols-outlined text-sm">edit_document</span> Offline Assessment Mode
+        </div>
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight mb-1">Field Assessment Console</h1>
+        <p class="text-xs md:text-sm text-slate-300">Conduct 1-on-1 Literacy & Numeracy evaluations directly in the classroom.</p>
+      </div>
+
+      <!-- Sync Status Indicator -->
+      <div class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/20 text-xs text-white">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Online & Synced</span>
+      </div>
+    </div>
+
+    <!-- Main Assessment Card -->
+    <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-md space-y-6 max-w-2xl mx-auto">
+      
+      <!-- Module Selection Control -->
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Assessment Subject</label>
+        <div class="flex bg-slate-100 p-1.5 rounded-2xl w-full border border-slate-200">
+          <button class="flex-1 py-2.5 px-4 rounded-xl bg-teal-600 text-white font-bold text-xs transition-all shadow-sm text-center flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-base">menu_book</span> Literacy (Hindi / English)
+          </button>
+          <button class="flex-1 py-2.5 px-4 rounded-xl text-slate-600 hover:bg-white font-medium text-xs transition-all text-center flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-base">calculate</span> Numeracy (Math)
+          </button>
+        </div>
+      </div>
+
+      <hr class="border-slate-100" />
+
+      <!-- Selection Form Grid -->
+      <div class="space-y-4">
+        <h3 class="text-sm font-bold text-slate-800">Select Student Roster Target</h3>
+        
+        <!-- District -->
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1" for="district">District</label>
+          <select id="district" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-colors">
+            <option disabled selected value="">Choose a district...</option>
+            <option value="d1">Kanpur Nagar</option>
+            <option value="d2">Delhi NCR</option>
+          </select>
+        </div>
+
+        <!-- School -->
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1" for="school">School / Center</label>
+          <select id="school" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-colors">
+            <option disabled selected value="">Choose a school...</option>
+            <option value="s1">Govt. Primary School Kanpur</option>
+            <option value="s2">Etasha Remedial Center</option>
+          </select>
+        </div>
+
+        <!-- Grade -->
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1" for="grade">Grade / Standard</label>
+          <select id="grade" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-colors">
+            <option disabled selected value="">Choose a grade...</option>
+            <option value="g1">Grade 1</option>
+            <option value="g2">Grade 2</option>
+            <option value="g3">Grade 3</option>
+          </select>
+        </div>
+
+        <!-- Student -->
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1" for="student">Student Name & Roll No.</label>
+          <select id="student" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-colors">
+            <option disabled selected value="">Choose a student...</option>
+            <option value="st1">Rohan Sharma (Roll: 101)</option>
+            <option value="st2">Neha Patel (Roll: 102)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="pt-2">
+        <button class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm py-3.5 rounded-2xl shadow-lg shadow-teal-600/20 transition-all active:scale-95 flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-lg">play_circle</span>
+          Start Assessment Session
         </button>
-</div>
-<!-- Desktop Action Area (Hidden on mobile) -->
-<div class="hidden md:flex justify-center px-margin-desktop pb-xl">
-<button class="w-full max-w-md bg-success hover:bg-emerald-500 text-on-success font-title-md text-title-md py-md rounded-full shadow-sm transition-transform active:scale-95 flex items-center justify-center gap-sm">
-<span class="material-symbols-outlined" data-icon="play_arrow">play_arrow</span>
-            Start Assessment Session
-        </button>
-</div>
-<!-- BottomNavBar (Semantic Match: Dashboard) -->
-<nav class="bg-surface-container dark:bg-surface-container-low text-primary dark:text-primary-fixed-dim font-label-md text-label-md font-title-lg text-title-lg text-primary fixed bottom-0 w-full z-50 h-20 bg-surface-container flat no shadows hover:bg-surface-container-highest ripple-effect active:scale-90 flex justify-around items-center w-full px-base pb-safe md:hidden">
-<!-- Dashboard (Active) -->
-<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 min-w-[64px]">
-<span class="material-symbols-outlined icon-fill" data-icon="dashboard" data-weight="fill">dashboard</span>
-<span class="mt-1">Dashboard</span>
-</button>
-<!-- Assessments -->
-<button class="flex flex-col items-center justify-center text-on-surface-variant min-w-[64px]">
-<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
-<span class="mt-1">Assessments</span>
-</button>
-<!-- History -->
-<button class="flex flex-col items-center justify-center text-on-surface-variant min-w-[64px]">
-<span class="material-symbols-outlined" data-icon="history">history</span>
-<span class="mt-1">History</span>
-</button>
-</nav>
-</body></html>
+  </main>
+</body>
+</html>

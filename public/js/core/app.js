@@ -26,6 +26,7 @@ const i18nDict = {
         wcpm: "WCPM",
         aboveGrade: "At/Above Grade Level",
         belowGrade: "Below Grade Level",
+        onboarding: "Onboarding"
     },
     hi: {
         appTitle: "नीव FLN असेसर",
@@ -44,6 +45,7 @@ const i18nDict = {
         wcpm: "WCPM",
         aboveGrade: "ग्रेड स्तर पर/ऊपर",
         belowGrade: "ग्रेड स्तर से नीचे",
+        onboarding: "ऑनबोर्डिंग"
     },
     hinglish: {
         appTitle: "Neev FLN Assessor",
@@ -62,6 +64,7 @@ const i18nDict = {
         wcpm: "WCPM",
         aboveGrade: "Grade level par/upar",
         belowGrade: "Grade level se neeche",
+        onboarding: "Onboarding"
     }
 };
 
@@ -92,10 +95,10 @@ const views = [
   'view-neev_fln_numeracy_assessment',
   'view-neev_fln_assessment_results',
   'view-neev_fln_admin_assessors',
-  'view-neev_fln_register_new_school',
   'view-neev_fln_register_student',
   'view-neev_fln_school_admin_dashboard',
-  'view-neev_fln_super_admin_dashboard'
+  'view-neev_fln_super_admin_dashboard',
+  'view-neev_fln_stakeholder_dashboard'
 ];
 
 function showView(viewId, pushToHistory = true) {
@@ -122,11 +125,16 @@ function showView(viewId, pushToHistory = true) {
         }
     });
     
+    if (viewId === 'view-neev_fln_super_admin_dashboard' && window.renderSuperAdminDashboardConsoles) {
+        window.renderSuperAdminDashboardConsoles();
+    }
+
     // Support browser back button
     if (pushToHistory) {
         window.history.pushState({ view: viewId }, '', `#${viewId}`);
     }
 }
+window.showView = showView;
 
 // Handle hardware back button / browser back swipe
 window.addEventListener('popstate', (event) => {
@@ -146,76 +154,183 @@ let speechEngine = null;
 
 // --- Keypad and Login Logic ---
 let enteredPin = "";
-const pinDotsContainer = document.querySelector('#view-neev_fln_login main div.flex.items-center.justify-center');
+let failedAttempts = 0;
+let lockoutUntil = 0;
+let cachedActiveUserId = null;
 
 function updatePinDots() {
-    if (!pinDotsContainer) return;
-    const dots = pinDotsContainer.children;
-    for (let i = 0; i < dots.length; i++) {
-        if (!dots[i].classList.contains('pin-dot')) continue;
+    const dots = document.querySelectorAll('#view-neev_fln_login .pin-dot');
+    dots.forEach((dot, i) => {
         if (i < enteredPin.length) {
-            dots[i].className = "pin-dot w-3.5 h-3.5 rounded-full border-2 border-white bg-white transition-colors shadow-sm";
+            dot.className = "pin-dot w-3 h-3 rounded-full border-2 border-white bg-white transition-colors shadow-sm";
         } else {
-            dots[i].className = "pin-dot w-3.5 h-3.5 rounded-full border-2 border-white/70 bg-transparent transition-colors shadow-sm";
+            dot.className = "pin-dot w-3 h-3 rounded-full border-2 border-white/70 bg-transparent transition-colors shadow-sm";
         }
+    });
+}
+
+function loadRememberedProfile() {
+    const lastId = localStorage.getItem('neev_last_user_id');
+    const cardEl = document.getElementById('remember-me-card');
+    const inputContainerEl = document.getElementById('userid-input-container');
+
+    if (lastId && cardEl && inputContainerEl) {
+        DB.get('assessors', lastId).then(user => {
+            if (user) {
+                cachedActiveUserId = user.id;
+                document.getElementById('remember-name').textContent = user.username || user.id;
+                document.getElementById('remember-userid').textContent = `@${user.id}`;
+                document.getElementById('remember-avatar').textContent = (user.username || user.id).charAt(0).toUpperCase();
+                cardEl.classList.remove('hidden');
+                inputContainerEl.classList.add('hidden');
+            } else {
+                window.switchUserAccount();
+            }
+        }).catch(() => window.switchUserAccount());
+    } else {
+        window.switchUserAccount();
     }
 }
 
+window.switchUserAccount = function() {
+    localStorage.removeItem('neev_last_user_id');
+    cachedActiveUserId = null;
+    const cardEl = document.getElementById('remember-me-card');
+    const inputContainerEl = document.getElementById('userid-input-container');
+    if (cardEl) cardEl.classList.add('hidden');
+    if (inputContainerEl) inputContainerEl.classList.remove('hidden');
+    enteredPin = "";
+    updatePinDots();
+};
+
 async function verifyLogin() {
-    const select = document.getElementById('assessor-select');
-    const assessorId = select.value;
-    if (!assessorId) {
-        alert("Please select an Assessor");
+    // Check Lockout
+    if (Date.now() < lockoutUntil) {
+        const remainingSecs = Math.ceil((lockoutUntil - Date.now()) / 1000);
+        alert(`Account temporarily locked due to failed PIN attempts. Try again in ${remainingSecs}s.`);
         enteredPin = "";
         updatePinDots();
         return;
     }
 
-    const assessor = await DB.get('assessors', assessorId);
-    if (!assessor) {
-        alert("Assessor not found");
+    let userId = cachedActiveUserId;
+    if (!userId) {
+        const inputEl = document.getElementById('user-id-input');
+        userId = inputEl ? inputEl.value.trim().toLowerCase() : "";
+    }
+
+    if (!userId) {
+        alert("Please enter a valid User ID.");
+        enteredPin = "";
+        updatePinDots();
         return;
     }
 
-    const hashedInput = await CryptoHelper.hashPIN(enteredPin, assessor.salt);
-    if (hashedInput === assessor.pinHash) {
-        // Derive key and save securely in db.js module closure
-        CryptoHelper.setActiveSessionKey(await CryptoHelper.deriveKey(enteredPin, assessor.salt));
-        activeAssessor = assessor;
-        
+    if (enteredPin.length !== 6) {
+        alert("Please enter your complete 6-digit PIN.");
+        return;
+    }
+
+    const user = await DB.get('assessors', userId);
+    if (!user) {
+        alert(`User ID "${userId}" not found. Please check your credentials.`);
         enteredPin = "";
         updatePinDots();
-        
-        if (assessor.role === 'super_admin') {
+        return;
+    }
+
+    if (user.status === 'deactivated') {
+        alert("This account has been deactivated by Super Admin.");
+        enteredPin = "";
+        updatePinDots();
+        return;
+    }
+
+    const hashedInput = await CryptoHelper.hashPIN(enteredPin, user.salt);
+    if (hashedInput === user.pinHash) {
+        // Derive AES key
+        CryptoHelper.setActiveSessionKey(await CryptoHelper.deriveKey(enteredPin, user.salt));
+        activeAssessor = user;
+        localStorage.setItem('neev_last_user_id', user.id);
+        failedAttempts = 0;
+
+        enteredPin = "";
+        updatePinDots();
+
+        // Mandatory First-Time PIN Setup check
+        if (user.mustChangePin) {
+            const firstTimeModal = document.getElementById('modal-first-time-pin');
+            if (firstTimeModal) firstTimeModal.classList.remove('hidden');
+        }
+
+        // Route by User Role
+        if (user.role === 'super_admin') {
             showView('view-neev_fln_super_admin_dashboard');
-        } else if (assessor.role === 'school_admin') {
+        } else if (user.role === 'school_admin') {
             showView('view-neev_fln_school_admin_dashboard');
+        } else if (user.role === 'stakeholder') {
+            // Update Stakeholder portal badges
+            const nameEl = document.getElementById('stakeholder-user-name');
+            const badgeEl = document.getElementById('stakeholder-scope-badge');
+            const titleEl = document.getElementById('stakeholder-scope-title');
+            if (nameEl) nameEl.textContent = user.username || user.id;
+            if (badgeEl) badgeEl.textContent = `Scope: ${(user.scopeLevel || 'Global').toUpperCase()}`;
+            if (titleEl) titleEl.textContent = `${(user.scopeLevel || 'Program').toUpperCase()} Level Analytics`;
+            showView('view-neev_fln_stakeholder_dashboard');
         } else {
             showView('view-neev_fln_dashboard');
             loadDashboardDropdowns();
         }
     } else {
-        alert("Incorrect PIN");
+        failedAttempts++;
+        if (failedAttempts >= 5) {
+            lockoutUntil = Date.now() + 60000; // 60s cooldown
+            alert("Too many incorrect PIN attempts. Locked for 60 seconds.");
+        } else {
+            alert(`Incorrect 6-Digit PIN. (${5 - failedAttempts} attempts remaining)`);
+        }
         enteredPin = "";
         updatePinDots();
     }
 }
 
-// Global logout function to clear sensitive state
-window.logout = function() {
-    activeAssessor = null;
-    CryptoHelper.setActiveSessionKey(null);
-    enteredPin = "";
-    updatePinDots();
-    showView('view-neev_fln_login');
+window.submitFirstTimePinChange = async function(form) {
+    const formData = new FormData(form);
+    const newPin = (formData.get('newPin') || '').trim();
+    const confirmPin = (formData.get('confirmPin') || '').trim();
+
+    if (newPin.length !== 6 || isNaN(newPin)) {
+        alert("Please enter a valid 6-digit numerical PIN.");
+        return;
+    }
+
+    if (newPin !== confirmPin) {
+        alert("New PIN and Confirm PIN do not match.");
+        return;
+    }
+
+    if (activeAssessor) {
+        const salt = CryptoHelper.generateSalt();
+        const pinHash = await CryptoHelper.hashPIN(newPin, salt);
+        activeAssessor.pinHash = pinHash;
+        activeAssessor.salt = salt;
+        activeAssessor.mustChangePin = false;
+
+        await DB.put('assessors', activeAssessor);
+        CryptoHelper.setActiveSessionKey(await CryptoHelper.deriveKey(newPin, salt));
+
+        alert("PIN set successfully! You are now logged in.");
+        document.getElementById('modal-first-time-pin').classList.add('hidden');
+    }
 };
 
-// Global logout function to clear sensitive state
+// Global logout function
 window.logout = function() {
     activeAssessor = null;
     CryptoHelper.setActiveSessionKey(null);
     enteredPin = "";
     updatePinDots();
+    loadRememberedProfile();
     showView('view-neev_fln_login');
 };
 
@@ -226,23 +341,71 @@ function setupLoginKeypad() {
             const val = btn.innerText.trim();
             if (val === 'Clear') {
                 enteredPin = "";
-            } else if (btn.querySelector('span') || val === 'backspace') { // backspace symbol
+            } else if (btn.querySelector('span') || val === 'backspace') {
                 enteredPin = enteredPin.slice(0, -1);
             } else {
-                if (enteredPin.length < 4 && val.length === 1 && !isNaN(val)) {
+                if (enteredPin.length < 6 && val.length === 1 && !isNaN(val)) {
                     enteredPin += val;
                 }
             }
             updatePinDots();
+
+            if (enteredPin.length === 6) {
+                setTimeout(() => verifyLogin(), 100);
+            }
         });
+    });
+
+    // Enter key handling on User ID input to shift focus to PIN entry
+    const userIdInput = document.getElementById('user-id-input');
+    if (userIdInput) {
+        userIdInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                userIdInput.blur();
+            }
+        });
+    }
+
+    // Physical Keyboard Listener for Laptops/Desktops
+    window.addEventListener('keydown', (e) => {
+        const loginView = document.getElementById('view-neev_fln_login');
+        if (!loginView || !loginView.classList.contains('active')) return;
+
+        // Ignore if typing inside the User ID input box (unless hitting Enter)
+        if (document.activeElement && document.activeElement.id === 'user-id-input') {
+            return;
+        }
+
+        if (e.key >= '0' && e.key <= '9') {
+            if (enteredPin.length < 6) {
+                enteredPin += e.key;
+                updatePinDots();
+                if (enteredPin.length === 6) {
+                    setTimeout(() => verifyLogin(), 100);
+                }
+            }
+        } else if (e.key === 'Backspace') {
+            enteredPin = enteredPin.slice(0, -1);
+            updatePinDots();
+        } else if (e.key === 'Escape' || e.key === 'Delete') {
+            enteredPin = "";
+            updatePinDots();
+        } else if (e.key === 'Enter') {
+            if (enteredPin.length === 6) {
+                verifyLogin();
+            } else {
+                alert("Please enter your complete 6-digit PIN.");
+            }
+        }
     });
 }
 
 window.triggerManualLogin = function() {
-    if (enteredPin.length === 4) {
+    if (enteredPin.length === 6) {
         verifyLogin();
     } else {
-        alert("Please enter your full 4-digit PIN.");
+        alert("Please enter your complete 6-digit PIN.");
     }
 };
 
@@ -252,19 +415,22 @@ const translations = {
         'selectAssessor': 'Select Assessor Name',
         'tapToChoose': 'Tap to choose...',
         'clear': 'Clear',
-        'logIn': 'Log In'
+        'logIn': 'Log In',
+        'onboarding': 'Onboarding'
     },
     'hi': {
         'selectAssessor': 'मूल्यांकनकर्ता का नाम चुनें',
         'tapToChoose': 'चुनने के लिए टैप करें...',
         'clear': 'साफ़ करें',
-        'logIn': 'लॉग इन'
+        'logIn': 'लॉग इन',
+        'onboarding': 'ऑनबोर्डिंग'
     },
     'hi_en': {
         'selectAssessor': 'Assessor Name select karein',
         'tapToChoose': 'Choose karne ke liye tap karein...',
         'clear': 'Clear karein',
-        'logIn': 'Log In'
+        'logIn': 'Log In',
+        'onboarding': 'Onboarding'
     }
 };
 
@@ -294,27 +460,20 @@ window.switchLanguage = function(lang) {
 // --- Onboarding Wireup ---
 function setupOnboarding() {
     const cards = document.querySelectorAll('#view-neev_fln_onboarding .onboarding-card');
-    if (cards.length >= 3) {
-        // Explore with Demo Data
-        cards[0].addEventListener('click', async () => {
-            await injectDemoData();
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            showView('view-neev_fln_login');
         });
-        
-        // Setup for NGO
-        cards[1].addEventListener('click', () => {
-            showView('view-neev_fln_register_new_school');
-        });
-
-        // Import NGO Config
-        cards[2].addEventListener('click', () => {
-            alert("Roster import file dialog trigger mockup");
-        });
-    }
+    });
 }
 
 // --- Dashboard &Cascading Dropdowns ---
 async function loadDashboardDropdowns() {
-    const schools = await DB.getAll('schools');
+    const rawSchools = await DB.getAll('schools');
+    const allProjects = await DB.getAll('projects');
+    const activeProjectIds = new Set(allProjects.filter(p => p.status !== 'archived').map(p => p.id));
+    const schools = rawSchools.filter(s => !s.projectId || activeProjectIds.has(s.projectId));
+
     const districtSelect = document.getElementById('district');
     const schoolSelect = document.getElementById('school');
     const gradeSelect = document.getElementById('grade');
@@ -791,105 +950,46 @@ async function initApp() {
         setLanguage('en');
     }
 
-    // Check if assessors exist
-    const assessors = await DB.getAll('assessors');
-    if (assessors.length > 0) {
-        // Populate Select List safely
-        const select = document.getElementById('assessor-select');
-        if (select) {
-            select.textContent = ''; // clear options
-            const defaultOpt = document.createElement('option');
-            defaultOpt.disabled = true;
-            defaultOpt.selected = true;
-            defaultOpt.value = '';
-            defaultOpt.textContent = 'Tap to choose...';
-            defaultOpt.className = 'text-gray-900 bg-white';
-            defaultOpt.style.color = '#111827';
-            defaultOpt.style.backgroundColor = '#ffffff';
-            select.appendChild(defaultOpt);
-            
-            assessors.forEach(a => {
-                const opt = document.createElement('option');
-                opt.value = a.id;
-                opt.textContent = a.username;
-                opt.className = 'text-gray-900 bg-white';
-                opt.style.color = '#111827';
-                opt.style.backgroundColor = '#ffffff';
-                select.appendChild(opt);
+    // Seed Demo User Accounts if missing
+    const seedUsers = [
+        { id: "superadmin", username: "Rakesh Verma (Super Admin)", role: "super_admin" },
+        { id: "teamlead", username: "Ananya Roy (Team Leader)", role: "school_admin" },
+        { id: "assessor1", username: "Priya Sharma (Field Assessor)", role: "assessor" },
+        { id: "principal", username: "Dr. S. K. Gupta (Principal)", role: "stakeholder", scopeLevel: "school", scopeId: "sch1" },
+        { id: "district_deo", username: "Vikram Singh (DEO Kanpur)", role: "stakeholder", scopeLevel: "district", scopeId: "Kanpur" },
+        { id: "funder", username: "Global Education Fund", role: "stakeholder", scopeLevel: "program", scopeId: "global" }
+    ];
+
+    for (let u of seedUsers) {
+        const existing = await DB.get('assessors', u.id);
+        if (!existing) {
+            const salt = CryptoHelper.generateSalt();
+            const pinHash = await CryptoHelper.hashPIN("123456", salt);
+            await DB.put('assessors', {
+                id: u.id,
+                username: u.username,
+                pinHash: pinHash,
+                salt: salt,
+                role: u.role,
+                scopeLevel: u.scopeLevel || null,
+                scopeId: u.scopeId || null
             });
         }
-        showView('view-neev_fln_login');
+    }
+
+    loadRememberedProfile();
+
+    // Check initial hash location or default to login
+    const initialHash = window.location.hash.replace('#', '');
+    if (initialHash && views.includes(initialHash)) {
+        showView(initialHash, false);
     } else {
-        showView('view-neev_fln_onboarding');
+        showView('view-neev_fln_login', false);
     }
 
     setupOnboarding();
     setupLoginKeypad();
     setupDashboard();
-}
-
-// Demo Data Injector
-async function injectDemoData() {
-    // Pre-populate sample passages (Tier 1-4)
-    const passages = [
-        { id: "pass-tier1-en", tier: 1, language: "en", title: "The Cat", content: "The cat sat on the mat. It was a fat cat.", words: ["the","cat","sat","on","the","mat","it","was","a","fat","cat"] },
-        { id: "pass-tier1-hi", tier: 1, language: "hi", title: "बिल्ली", content: "बिल्ली चटाई पर बैठी।", words: ["बिल्ली","चटाई","पर","बैठी"] }
-    ];
-    for (let p of passages) {
-        await DB.put('passages', p);
-    }
-    
-    // Pre-populate schools and students
-    const schools = [
-        { id: "sch1", name: "Govt. Primary School Kanpur", district: "Kanpur" },
-        { id: "sch2", name: "Etasha Remedial Center", district: "Delhi" }
-    ];
-    for (let s of schools) {
-        await DB.put('schools', s);
-    }
-
-    // Salt and Encrypt Student names/rolls for security
-    const studentData = [
-        { id: "st1", name: "Rohan Sharma", roll: "101", grade: 3, schoolId: "sch1" },
-        { id: "st2", name: "Neha Patel", roll: "102", grade: 2, schoolId: "sch1" }
-    ];
-
-    // Pre-populate assessors for different roles
-    const salt = CryptoHelper.generateSalt();
-    const pinHash = await CryptoHelper.hashPIN("1234", salt);
-    
-    await DB.put('assessors', { id: "super", username: "State Director", pinHash: pinHash, salt: salt, role: "super_admin" });
-    await DB.put('assessors', { id: "admin", username: "Principal", pinHash: pinHash, salt: salt, role: "school_admin" });
-    await DB.put('assessors', { id: "teacher", username: "Teacher", pinHash: pinHash, salt: salt, role: "assessor" });
-
-    // Derive demo AES key locally to encrypt mock roster
-    CryptoHelper.setActiveSessionKey(await CryptoHelper.deriveKey("1234", salt));
-
-    for (let s of studentData) {
-        const encName = await CryptoHelper.encryptData(s.name);
-        const encRoll = await CryptoHelper.encryptData(s.roll);
-        await DB.put('students', {
-            id: s.id,
-            name: encName,
-            rollNumber: encRoll,
-            grade: s.grade,
-            schoolId: s.schoolId
-        });
-    }
-
-    alert("Kanpur Demo data roster loaded! Login PIN is 1234");
-    
-    // Repopulate Select dropdown
-    const select = document.getElementById('assessor-select');
-    if (select) {
-        select.textContent = '';
-        const opt = document.createElement('option');
-        opt.value = 'admin';
-        opt.textContent = 'Admin';
-        select.appendChild(opt);
-    }
-    
-    showView('view-neev_fln_login');
 }
 
 // Handle Background Sync message from Service Worker
@@ -902,7 +1002,443 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-export { setLanguage, showView, initApp, injectDemoData };
+export { setLanguage, showView, initApp };
+
+// --- Modal Form Handlers (Solid Mobile-First Cards) ---
+
+window.saveFunder = async function(form) {
+    const formData = new FormData(form);
+    const funderName = formData.get('funderName');
+    if (!funderName) return;
+
+    const funderId = 'funder_' + funderName.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    await DB.put('funders', {
+        id: funderId,
+        name: funderName,
+        contactPerson: formData.get('contactPerson') || '',
+        contactEmail: formData.get('contactEmail') || '',
+        createdAt: new Date().toISOString()
+    });
+
+    alert(`Funder "${funderName}" onboarded successfully!`);
+    document.getElementById('modal-onboard-funder').classList.add('hidden');
+    form.reset();
+};
+
+window.saveProject = async function(form) {
+    const formData = new FormData(form);
+    const projectName = formData.get('projectName');
+    if (!projectName) return;
+
+    const projectId = 'proj_' + projectName.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const funderShareElements = form.querySelectorAll('#project-funder-shares > div');
+    const funderShares = [];
+
+    funderShareElements.forEach(div => {
+        const checkbox = div.querySelector('input[type="checkbox"]');
+        const shareInput = div.querySelector('input[type="number"]');
+        if (checkbox && checkbox.checked) {
+            funderShares.push({
+                funderId: checkbox.value,
+                sharePercent: parseInt(shareInput ? shareInput.value : '100', 10)
+            });
+        }
+    });
+
+    await DB.put('projects', {
+        id: projectId,
+        name: projectName,
+        targetDistrict: formData.get('targetDistrict') || '',
+        funderShares: funderShares,
+        funderIds: funderShares.map(fs => fs.funderId),
+        startDate: formData.get('startDate') || '',
+        endDate: formData.get('endDate') || '',
+        status: 'active',
+        createdAt: new Date().toISOString()
+    });
+
+    alert(`Project "${projectName}" onboarded successfully with percentage shares!`);
+    document.getElementById('modal-onboard-project').classList.add('hidden');
+    form.reset();
+    window.renderSuperAdminDashboardConsoles();
+};
+
+window.openProvisionUserModal = function(funderId) {
+    window.openUniversalUserModal(funderId);
+};
+
+window.openUniversalUserModal = async function(funderId = null) {
+    const teamleadSelect = document.getElementById('user-teamlead-select');
+    const funderSelect = document.getElementById('user-funder-select');
+    
+    if (teamleadSelect) {
+        const allUsers = await DB.getAll('assessors');
+        const teamleads = allUsers.filter(u => u.role === 'school_admin');
+        teamleadSelect.innerHTML = teamleads.map(tl => `<option value="${tl.id}">${tl.username} (@${tl.id})</option>`).join('') || '<option value="teamlead">Ananya Roy (@teamlead)</option>';
+    }
+
+    if (funderSelect) {
+        const allFunders = await DB.getAll('funders');
+        funderSelect.innerHTML = allFunders.map(f => `<option value="${f.id}">${f.name}</option>`).join('') || '<option value="funder_hcl">HCL Foundation</option>';
+        if (funderId) funderSelect.value = funderId;
+    }
+
+    const modal = document.getElementById('modal-provision-universal-user');
+    if (modal) modal.classList.remove('hidden');
+};
+
+window.handleRoleSelectChange = function(role) {
+    const distDiv = document.getElementById('role-field-district');
+    const teamDiv = document.getElementById('role-field-teamlead');
+    const fundDiv = document.getElementById('role-field-funder');
+
+    if (distDiv) distDiv.classList.toggle('hidden', role !== 'school_admin');
+    if (teamDiv) teamDiv.classList.toggle('hidden', role !== 'assessor');
+    if (fundDiv) fundDiv.classList.toggle('hidden', role !== 'stakeholder');
+};
+
+window.saveUniversalUser = async function(form) {
+    const formData = new FormData(form);
+    const role = formData.get('role');
+    const userId = (formData.get('userId') || '').trim().replace(/^@/, '');
+    const username = (formData.get('username') || '').trim();
+    const pin = (formData.get('pin') || '123456').trim();
+
+    if (!userId || !username || !pin) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    const salt = CryptoHelper.generateSalt();
+    const pinHash = await CryptoHelper.hashPIN(pin, salt);
+
+    const userObj = {
+        id: userId,
+        username: username,
+        pinHash: pinHash,
+        salt: salt,
+        role: role,
+        status: 'active',
+        mustChangePin: true, // Flagged for mandatory PIN change on first login
+        createdAt: new Date().toISOString()
+    };
+
+    if (role === 'school_admin') {
+        userObj.district = formData.get('district') || 'Kanpur Nagar';
+        userObj.scopeLevel = 'district';
+    } else if (role === 'assessor') {
+        userObj.teamLeaderId = formData.get('teamLeaderId') || 'teamlead';
+        userObj.scopeLevel = 'school';
+    } else if (role === 'stakeholder') {
+        userObj.funderId = formData.get('funderId') || 'funder_hcl';
+        userObj.scopeId = userObj.funderId;
+        userObj.scopeLevel = 'program';
+    } else {
+        userObj.scopeLevel = 'global';
+    }
+
+    await DB.put('assessors', userObj);
+    alert(`User "@${userId}" (${role}) provisioned successfully with temporary PIN!`);
+    document.getElementById('modal-provision-universal-user').classList.add('hidden');
+    form.reset();
+    window.renderSuperAdminDashboardConsoles();
+};
+
+window.saveCluster = async function(form) {
+    const formData = new FormData(form);
+    const clusterName = formData.get('clusterName');
+    const clusterCode = formData.get('clusterCode');
+    if (!clusterName || !clusterCode) return;
+
+    const clusterId = 'cls_' + clusterCode.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    await DB.put('clusters', {
+        id: clusterId,
+        name: clusterName,
+        code: clusterCode,
+        district: formData.get('district') || 'Kanpur Nagar',
+        block: formData.get('block') || 'Kalyanpur',
+        teamLeaderId: formData.get('teamLeaderId') || 'teamlead',
+        status: 'active',
+        createdAt: new Date().toISOString()
+    });
+
+    alert(`Cluster "${clusterName}" (${clusterCode}) onboarded successfully!`);
+    document.getElementById('modal-onboard-cluster').classList.add('hidden');
+    form.reset();
+    window.renderSuperAdminDashboardConsoles();
+};
+
+window.savePassage = async function(form) {
+    const formData = new FormData(form);
+    const title = formData.get('title');
+    const content = formData.get('content');
+    if (!title || !content) return;
+
+    const passageId = 'pas_' + Date.now().toString().slice(-6);
+    await DB.put('passages', {
+        id: passageId,
+        title: title,
+        language: formData.get('language') || 'Hindi',
+        tier: parseInt(formData.get('tier') || '3', 10),
+        wordCount: parseInt(formData.get('wordCount') || '60', 10),
+        content: content,
+        createdAt: new Date().toISOString()
+    });
+
+    alert(`Reading Passage "${title}" saved successfully!`);
+    document.getElementById('modal-manage-passages').classList.add('hidden');
+    form.reset();
+};
+
+window.resetUserPIN = async function(userId) {
+    const newPin = prompt(`Enter new initial 6-digit PIN for @${userId}:`, "123456");
+    if (!newPin || newPin.length !== 6) {
+        alert("Invalid PIN. Reset cancelled.");
+        return;
+    }
+
+    const user = await DB.get('assessors', userId);
+    if (!user) return;
+
+    const salt = CryptoHelper.generateSalt();
+    user.pinHash = await CryptoHelper.hashPIN(newPin, salt);
+    user.salt = salt;
+    user.mustChangePin = true;
+
+    await DB.put('assessors', user);
+    alert(`PIN for @${userId} reset successfully to ${newPin}. Mandatory PIN change enabled.`);
+};
+
+window.toggleUserActiveStatus = async function(userId) {
+    const user = await DB.get('assessors', userId);
+    if (!user) return;
+
+    const newStatus = user.status === 'deactivated' ? 'active' : 'deactivated';
+    user.status = newStatus;
+    await DB.put('assessors', user);
+
+    if (activeAssessor && activeAssessor.id === userId && newStatus === 'deactivated') {
+        alert("Your session has been deactivated by Super Admin.");
+        window.logout();
+        return;
+    }
+
+    alert(`User @${userId} status updated to: ${newStatus.toUpperCase()}`);
+    window.renderSuperAdminDashboardConsoles();
+};
+
+window.toggleProjectArchive = async function(projectId) {
+    const proj = await DB.get('projects', projectId);
+    if (!proj) return;
+
+    const newStatus = proj.status === 'archived' ? 'active' : 'archived';
+    proj.status = newStatus;
+    await DB.put('projects', proj);
+
+    alert(`Project "${proj.name || projectId}" status updated to: ${newStatus.toUpperCase()}`);
+    window.renderSuperAdminDashboardConsoles();
+};
+
+// --- Master CSV Exporters ---
+window.exportAssessmentLogsCSV = async function() {
+    const assessments = await DB.getAll('assessments');
+    if (!assessments || assessments.length === 0) {
+        alert("No assessment records found to export.");
+        return;
+    }
+
+    let csvContent = "Assessment ID,Student ID,Project ID,School ID,District,Assessor ID,Subject,Term,Score,WCPM,Accuracy %,Tier,Academic Year,Timestamp\n";
+
+    assessments.forEach(a => {
+        csvContent += `"${a.id}","${a.studentId}","${a.projectId || ''}","${a.schoolId || ''}","${a.district || ''}","${a.assessorId || ''}","${a.subject || ''}","${a.term || ''}",${a.score || 0},${a.wcpm || 0},${a.accuracy || 0},"${a.tier || ''}","${a.academicYear || ''}","${a.timestampStart || ''}"\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `neev_fln_assessments_master_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
+window.exportSchoolSummariesCSV = async function() {
+    const schools = await DB.getAll('schools');
+    if (!schools || schools.length === 0) {
+        alert("No school records found to export.");
+        return;
+    }
+
+    let csvContent = "School ID,School Name,Project ID,District,Block,Team Leader ID,Created At\n";
+
+    schools.forEach(s => {
+        csvContent += `"${s.id}","${s.name}","${s.projectId || ''}","${s.district || ''}","${s.block || ''}","${s.teamLeaderId || ''}","${s.createdAt || ''}"\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `neev_fln_schools_master_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
+// --- Reactive Render Engines for Super Admin Consoles ---
+window.renderSuperAdminDashboardConsoles = async function() {
+    const usersTable = document.getElementById('superadmin-users-list');
+    const clustersTable = document.getElementById('superadmin-clusters-list');
+    const projectsTable = document.getElementById('superadmin-projects-list');
+    const fundersTable = document.getElementById('superadmin-funders-list');
+
+    if (!usersTable && !projectsTable) return;
+
+    // 1. Render Users Console
+    if (usersTable) {
+        const users = await DB.getAll('assessors');
+        const roleBadges = {
+            super_admin: '<span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 border border-indigo-200 text-[10px] font-bold">Super Admin</span>',
+            school_admin: '<span class="px-2 py-0.5 rounded bg-teal-100 text-teal-800 border border-teal-200 text-[10px] font-bold">Team Leader</span>',
+            assessor: '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold">Field Assessor</span>',
+            stakeholder: '<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200 text-[10px] font-bold">Stakeholder</span>'
+        };
+
+        usersTable.innerHTML = users.map(u => {
+            const statusPill = u.status === 'deactivated' 
+                ? '<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-[10px] font-bold">Deactivated</span>'
+                : '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">Active</span>';
+            const scopeText = u.district || u.teamLeaderId ? `@${u.teamLeaderId}` : u.funderId || 'Global';
+
+            return `<tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="p-3 pl-4 font-bold text-slate-800">@${u.id} <span class="font-normal text-slate-500">(${u.username})</span></td>
+                <td class="p-3">${roleBadges[u.role] || u.role}</td>
+                <td class="p-3 text-slate-600">${scopeText}</td>
+                <td class="p-3">${statusPill}</td>
+                <td class="p-3 pr-4 text-right space-x-2">
+                    <button onclick="window.resetUserPIN('${u.id}')" class="text-indigo-600 hover:text-indigo-800 font-medium">Reset PIN</button>
+                    <button onclick="window.toggleUserActiveStatus('${u.id}')" class="text-slate-500 hover:text-slate-800 font-medium">${u.status === 'deactivated' ? 'Activate' : 'Deactivate'}</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    // 2. Render Clusters Console
+    if (clustersTable) {
+        const clusters = await DB.getAll('clusters');
+        clustersTable.innerHTML = clusters.map(c => `
+            <tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="p-3 pl-4 font-bold text-slate-800">${c.name} <span class="font-mono text-slate-400 font-normal">(${c.code})</span></td>
+                <td class="p-3">${c.district} / ${c.block}</td>
+                <td class="p-3 font-medium text-slate-700">@${c.teamLeaderId}</td>
+                <td class="p-3"><span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">Active</span></td>
+                <td class="p-3 pr-4 text-right">
+                    <button onclick="alert('Editing Cluster ${c.code}...')" class="text-amber-600 hover:text-amber-800 font-medium">Edit</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // 3. Render Projects Console
+    if (projectsTable) {
+        const projects = await DB.getAll('projects');
+        projectsTable.innerHTML = projects.map(p => {
+            const sharesBadges = (p.funderShares || []).map(s => `<span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-medium">${s.funderId} (${s.sharePercent}%)</span>`).join(' ') || '<span class="text-slate-400">100%</span>';
+            const statusPill = p.status === 'archived'
+                ? '<span class="px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold">Archived</span>'
+                : '<span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">Active</span>';
+
+            return `<tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="p-3 pl-4 font-bold text-slate-800">${p.name}</td>
+                <td class="p-3">${sharesBadges}</td>
+                <td class="p-3">${p.targetDistrict || 'Kanpur Nagar'}</td>
+                <td class="p-3">${statusPill}</td>
+                <td class="p-3 pr-4 text-right">
+                    <button onclick="window.toggleProjectArchive('${p.id}')" class="text-slate-500 hover:text-slate-800 font-medium">${p.status === 'archived' ? 'Unarchive' : 'Archive'}</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    // 4. Render Funders Console
+    if (fundersTable) {
+        const funders = await DB.getAll('funders');
+        const users = await DB.getAll('assessors');
+
+        fundersTable.innerHTML = funders.map(f => {
+            const funderUsers = users.filter(u => u.funderId === f.id);
+            const userTags = funderUsers.map(u => `<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-800 font-mono text-[11px] border border-slate-200">@${u.id}</span>`).join(' ') || '<span class="text-slate-400 text-xs">No users provisioned</span>';
+
+            return `<tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="p-3 pl-4 font-bold text-slate-800">${f.name}</td>
+                <td class="p-3">${f.contactPerson || ''} (${f.contactEmail || ''})</td>
+                <td class="p-3 flex flex-wrap gap-1">${userTags}</td>
+                <td class="p-3 pr-4 text-right">
+                    <button onclick="window.openProvisionUserModal('${f.id}')" class="text-indigo-600 hover:text-indigo-800 font-semibold">+ Add User ID</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+};
+
+window.saveSchool = async function(form) {
+    const formData = new FormData(form);
+    const schoolName = formData.get('schoolName');
+    if (!schoolName) return;
+
+    const schoolId = 'sch_' + schoolName.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    await DB.put('schools', {
+        id: schoolId,
+        name: schoolName,
+        projectId: formData.get('projectId') || 'proj_utkarsh',
+        district: formData.get('district') || 'Kanpur Nagar',
+        block: formData.get('block') || 'Kalyanpur',
+        teamLeaderId: (activeAssessor && activeAssessor.id) ? activeAssessor.id : 'teamlead',
+        createdAt: new Date().toISOString()
+    });
+
+    alert(`School "${schoolName}" onboarded successfully!`);
+    document.getElementById('modal-onboard-school').classList.add('hidden');
+    form.reset();
+};
+
+window.saveStudent = async function(form) {
+    const formData = new FormData(form);
+    const studentName = formData.get('studentName');
+    const rollNumber = formData.get('rollNumber');
+    if (!studentName || !rollNumber) return;
+
+    const studentId = 'st_' + Date.now().toString().slice(-6);
+
+    let encName = { iv: '', cipher: studentName };
+    let encRoll = { iv: '', cipher: rollNumber };
+
+    try {
+        encName = await CryptoHelper.encryptData(studentName);
+        encRoll = await CryptoHelper.encryptData(rollNumber);
+    } catch (e) {
+        console.warn("Session key not active, saving plaintext in dev fallback");
+    }
+
+    await DB.put('students', {
+        id: studentId,
+        nameEncrypted: encName,
+        rollEncrypted: encRoll,
+        projectId: 'proj_utkarsh',
+        funderId: formData.get('funderId') || null,
+        schoolId: 'sch1',
+        district: 'Kanpur Nagar',
+        grade: parseInt(formData.get('grade') || '2', 10),
+        gender: formData.get('gender') || 'M',
+        dob: formData.get('dob') || '',
+        motherTongue: formData.get('motherTongue') || 'Hindi',
+        academicYear: '2026-27',
+        createdAt: new Date().toISOString()
+    });
+
+    alert(`Student "${studentName}" onboarded successfully!`);
+    document.getElementById('modal-onboard-student').classList.add('hidden');
+    form.reset();
+};
 
 if (document.readyState === 'loading') {
     document.addEventListener("DOMContentLoaded", () => {

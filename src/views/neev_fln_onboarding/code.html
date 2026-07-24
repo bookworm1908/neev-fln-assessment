@@ -225,57 +225,76 @@
       min-height: max(884px, 100dvh);
     }
   </style>
-  </head>
-<body class="h-full flex flex-col font-body-md text-on-background bg-background text-body-md">
-<!-- TopAppBar -->
-<header class="w-full top-0 sticky bg-background dark:bg-background h-16 flex items-center justify-between px-margin-mobile z-40">
-<div class="flex items-center gap-4">
-<span class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim font-bold tracking-tight">Neev FLN Assessor</span>
-</div>
-</header>
-<!-- Main Content -->
-<main class="flex-1 flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop py-xl overflow-y-auto">
-<div class="w-full max-w-md mx-auto text-center mb-xl">
-<div class="mb-sm text-primary">
-<span class="material-symbols-outlined" style="font-size: 48px;">school</span>
-</div>
-<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg mb-sm font-bold text-on-surface">Welcome to Neev FLN</h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant">Foundational Literacy and Numeracy assessment made simple.</p>
-</div>
-<div class="w-full max-w-md mx-auto flex flex-col gap-sm">
-<!-- Card 1 -->
-<button class="onboarding-card w-full flex items-center p-lg gap-sm cursor-pointer group text-left">
-<div class="icon-container w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container transition-colors shrink-0">
-<span class="material-symbols-outlined text-2xl group-hover:text-on-primary-container" style="font-variation-settings: 'wght' 200;">play_arrow</span>
-</div>
-<div class="flex-1">
-<h2 class="font-title-lg text-title-lg text-on-surface mb-xs">Explore with Demo Data</h2>
-<p class="font-body-md text-body-md text-on-surface-variant">Try out the features with sample student profiles.</p>
-</div>
-<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
-</button>
-<!-- Card 2 -->
-<button class="onboarding-card w-full flex items-center p-lg gap-sm cursor-pointer group text-left">
-<div class="icon-container w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container transition-colors shrink-0">
-<span class="material-symbols-outlined text-2xl group-hover:text-on-primary-container" style="font-variation-settings: 'wght' 200;">settings</span>
-</div>
-<div class="flex-1">
-<h2 class="font-title-lg text-title-lg text-on-surface mb-xs">Set up for my NGO</h2>
-<p class="font-body-md text-body-md text-on-surface-variant">Configure the app for your specific organizational needs.</p>
-</div>
-<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
-</button>
-<!-- Card 3 -->
-<button class="onboarding-card w-full flex items-center p-lg gap-sm cursor-pointer group text-left">
-<div class="icon-container w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary-container transition-colors shrink-0">
-<span class="material-symbols-outlined text-2xl group-hover:text-on-primary-container" style="font-variation-settings: 'wght' 200;">upload_file</span>
-</div>
-<div class="flex-1">
-<h2 class="font-title-lg text-title-lg text-on-surface mb-xs">Import NGO Configuration</h2>
-<p class="font-body-md text-body-md text-on-surface-variant">Load an existing configuration file.</p>
-</div>
-<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
-</button>
-</div>
-</main>
+<body class="antialiased">
+  <div class="min-h-full flex items-center justify-center p-4 md:p-8 flex-grow bg-cover bg-center bg-no-repeat relative" style="background-image: url('assets/images/classroom_bg.png');">
+    <!-- Dark overlay for better text contrast -->
+    <div class="absolute inset-0 bg-black/30"></div>
+
+    <!-- Glassmorphic Panel -->
+    <div class="w-full max-w-4xl max-h-[96vh] overflow-y-auto backdrop-blur-md bg-white/10 border border-white/20 shadow-2xl rounded-[32px] flex flex-col md:flex-row relative z-10">
+      
+      <!-- Unified Hero Panel (Visible on Desktop & Mobile) -->
+      <div class="hero-panel flex-1 p-6 md:p-8 flex flex-col items-center justify-center text-white text-center border-b md:border-b-0 md:border-r border-white/20 bg-white/5">
+        <div class="logo-box flex flex-row items-end justify-center gap-3 md:gap-4 mb-3 md:mb-6">
+          <!-- Exact Brand Logo Icon -->
+          <img src="assets/images/neev_logo.png" alt="NEEV Logo" class="logo-img h-20 md:h-28 w-auto object-contain drop-shadow-md shrink-0" />
+          <!-- NEEV Text aligned to bottom -->
+          <h1 class="logo-text text-3xl md:text-5xl font-bold tracking-tight text-white leading-none mb-1" style="text-shadow: 0 2px 10px rgba(0,0,0,0.4);">NEEV</h1>
+        </div>
+
+        <p class="neev-tagline text-sm md:text-xl opacity-100 max-w-sm leading-relaxed" style="text-shadow: 0 1px 6px rgba(0,0,0,0.5);">Building Stronger Foundations. Tracking Brighter Futures.</p>
+      </div>
+
+      <!-- Right Onboarding Options Panel -->
+      <div class="flex-1 flex flex-col items-center justify-center p-6 sm:p-8 bg-white/20 backdrop-blur-xl relative z-10 text-white">
+        
+        <!-- Header -->
+        <div class="w-full max-w-sm text-center mb-6">
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight mb-2" style="text-shadow: 0 2px 8px rgba(0,0,0,0.3);">Welcome to NEEV</h2>
+          <p class="text-xs md:text-sm text-white/90">Foundational Literacy & Numeracy assessment made simple.</p>
+        </div>
+
+        <!-- Options Container -->
+        <main class="w-full max-w-sm flex flex-col gap-3.5">
+          
+          <!-- Card 1: Explore with Demo Data -->
+          <button class="onboarding-card w-full flex items-center p-4 rounded-[20px] bg-white/10 hover:bg-white/25 active:scale-95 border border-white/30 backdrop-blur-md transition-all text-left group">
+            <div class="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-teal-500 group-hover:text-white transition-colors shrink-0 mr-3.5 shadow-sm border border-white/20">
+              <span class="material-symbols-outlined text-2xl text-white">play_arrow</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-bold text-sm md:text-base text-white mb-0.5">Explore with Demo Data</h3>
+              <p class="text-xs text-white/80 leading-snug">Try out features with sample student profiles.</p>
+            </div>
+            <span class="material-symbols-outlined text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all text-xl ml-1">arrow_forward</span>
+          </button>
+
+          <!-- Card 2: Set up for my NGO -->
+          <button class="onboarding-card w-full flex items-center p-4 rounded-[20px] bg-white/10 hover:bg-white/25 active:scale-95 border border-white/30 backdrop-blur-md transition-all text-left group">
+            <div class="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-teal-500 group-hover:text-white transition-colors shrink-0 mr-3.5 shadow-sm border border-white/20">
+              <span class="material-symbols-outlined text-2xl text-white">settings</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-bold text-sm md:text-base text-white mb-0.5">Set up for my NGO</h3>
+              <p class="text-xs text-white/80 leading-snug">Configure the app for your specific organizational needs.</p>
+            </div>
+            <span class="material-symbols-outlined text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all text-xl ml-1">arrow_forward</span>
+          </button>
+
+          <!-- Card 3: Import NGO Configuration -->
+          <button class="onboarding-card w-full flex items-center p-4 rounded-[20px] bg-white/10 hover:bg-white/25 active:scale-95 border border-white/30 backdrop-blur-md transition-all text-left group">
+            <div class="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-teal-500 group-hover:text-white transition-colors shrink-0 mr-3.5 shadow-sm border border-white/20">
+              <span class="material-symbols-outlined text-2xl text-white">upload_file</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-bold text-sm md:text-base text-white mb-0.5">Import NGO Configuration</h3>
+              <p class="text-xs text-white/80 leading-snug">Load an existing configuration file.</p>
+            </div>
+            <span class="material-symbols-outlined text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all text-xl ml-1">arrow_forward</span>
+          </button>
+
+        </main>
+      </div>
+    </div>
+  </div>
 </body></html>

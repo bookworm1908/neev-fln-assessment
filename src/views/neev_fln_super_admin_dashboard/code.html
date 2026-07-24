@@ -1,34 +1,474 @@
-<body class="h-full flex flex-col font-body-md text-on-background bg-background text-body-md">
-<!-- TopAppBar -->
-<header class="w-full top-0 sticky bg-tertiary dark:bg-tertiary h-16 flex items-center justify-between px-margin-mobile z-40 text-on-tertiary">
-    <div class="flex items-center gap-4">
-        <span class="material-symbols-outlined cursor-pointer active:scale-95 transition-transform" onclick="logout()" data-icon="logout">logout</span>
-        <span class="font-title-lg text-title-lg font-bold tracking-tight">State Admin Portal</span>
+<body class="h-full flex flex-col font-body-md text-on-background bg-slate-50 text-body-md antialiased">
+  <!-- Top Navigation Bar -->
+  <header class="w-full top-0 sticky bg-slate-900/90 backdrop-blur-md text-white h-16 flex items-center justify-between px-4 md:px-8 border-b border-slate-700/50 z-50 shadow-md">
+    <div class="flex items-center gap-3">
+      <img src="assets/images/neev_logo.png" alt="NEEV" class="h-9 w-auto object-contain" />
+      <span class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+        NEEV <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full border border-indigo-500/40 font-mono">Super Admin</span>
+      </span>
     </div>
-</header>
-<main class="flex-1 overflow-y-auto px-margin-mobile py-md flex flex-col gap-md">
-    <!-- District Heatmap -->
-    <section class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
-        <h2 class="font-title-md text-title-md text-tertiary mb-sm">District FLN Heatmap</h2>
-        <div class="flex flex-col gap-2">
-            <div class="flex items-center justify-between p-2 bg-[#d4edda] rounded">
-                <span class="font-label-lg">Kanpur</span> <span class="text-sm font-bold text-[#155724]">72% Pass</span>
-            </div>
-            <div class="flex items-center justify-between p-2 bg-[#fff3cd] rounded">
-                <span class="font-label-lg">Lucknow</span> <span class="text-sm font-bold text-[#856404]">55% Pass</span>
-            </div>
-            <div class="flex items-center justify-between p-2 bg-error-container bg-opacity-30 border border-error rounded">
-                <span class="font-label-lg">Varanasi</span> <span class="text-sm font-bold text-error">32% Pass</span>
-            </div>
-        </div>
-    </section>
+    <div class="flex items-center gap-3">
+      <button onclick="window.logout()" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/20 transition-all active:scale-95 flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">logout</span> Logout
+      </button>
+    </div>
+  </header>
 
-    <!-- Bulk Import -->
-    <section class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm text-center flex flex-col items-center">
-        <span class="material-symbols-outlined text-4xl text-tertiary mb-2">upload_file</span>
-        <h2 class="font-title-md text-title-md text-on-surface mb-xs">Bulk Roster Import</h2>
-        <p class="text-sm text-on-surface-variant mb-md">Upload state-wide student rosters via CSV.</p>
-        <button class="w-full py-2 bg-tertiary text-on-tertiary rounded-full font-label-lg shadow-md max-w-[200px]">Select CSV File</button>
-    </section>
-</main>
+  <!-- Main Content Canvas -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 space-y-6 overflow-y-auto">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 shadow-xl border border-indigo-500/20 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-400/10 border border-indigo-400/30 text-indigo-300 text-xs font-medium mb-3">
+          <span class="material-symbols-outlined text-sm">admin_panel_settings</span> System Administration
+        </div>
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight mb-1">Global Governance & Management Console</h1>
+        <p class="text-xs md:text-sm text-slate-300">Provision staff accounts, manage clusters, configure projects, and export CSR compliance reports.</p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="window.openUniversalUserModal()" class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-medium text-xs shadow-md transition-all flex items-center gap-1.5 active:scale-95">
+          <span class="material-symbols-outlined text-sm">person_add</span> + Provision Staff
+        </button>
+        <button onclick="document.getElementById('modal-onboard-cluster').classList.remove('hidden')" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs shadow-md transition-all flex items-center gap-1.5 active:scale-95">
+          <span class="material-symbols-outlined text-sm">hub</span> + Add Cluster
+        </button>
+        <button onclick="document.getElementById('modal-onboard-project').classList.remove('hidden')" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs shadow-md transition-all flex items-center gap-1.5 active:scale-95">
+          <span class="material-symbols-outlined text-sm">folder_open</span> + Add Project
+        </button>
+        <button onclick="document.getElementById('modal-onboard-funder').classList.remove('hidden')" class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs shadow-md transition-all flex items-center gap-1.5 active:scale-95">
+          <span class="material-symbols-outlined text-sm">handshake</span> + Add Funder
+        </button>
+      </div>
+    </div>
+
+    <!-- 3 Admin Operations Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Card 1: Multi-Role Staff Provisioning -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-slate-800 text-base">User Account Provisioning</h3>
+            <span class="w-8 h-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">manage_accounts</span>
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 mb-3">Provision User IDs, assign initial PINs, set mandatory first-login PIN changes, and assign district/team scopes.</p>
+        </div>
+        <button onclick="window.openUniversalUserModal()" class="mt-4 w-full py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-medium text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">person_add</span> Provision New User / Staff
+        </button>
+      </div>
+
+      <!-- Card 2: Master CSV & PDF Reports Exporter -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-slate-800 text-base">Master Data Exporter</h3>
+            <span class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">download</span>
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 mb-3">Export raw assessment logs, school performance summaries, and cluster compliance audits.</p>
+          <div class="space-y-2">
+            <button onclick="window.exportAssessmentLogsCSV()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-xl transition-colors flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-sm">csv</span> Export Assessment Logs (CSV)
+            </button>
+            <button onclick="window.exportSchoolSummariesCSV()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-xl transition-colors flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-sm">table_chart</span> Export School Summaries (Excel)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Master Passage & Rubric Config -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-slate-800 text-base">Passage & Rubric Config</h3>
+            <span class="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">description</span>
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 mb-3">Add or edit Tier 1–4 literacy reading passages, word counts, and math benchmarks.</p>
+          <button onclick="document.getElementById('modal-manage-passages').classList.remove('hidden')" class="w-full py-2 bg-teal-500 hover:bg-teal-600 text-white font-medium text-xs rounded-xl transition-colors shadow-sm">
+            Manage Reading Passages
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Section 1: Equalized System Users & Staff Directory Console -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">System Users & Staff Directory</h2>
+          <p class="text-xs text-slate-500">Manage all system accounts (`super_admin`, `school_admin`, `assessor`, `stakeholder`), reset PINs, and toggle active status.</p>
+        </div>
+        <button onclick="window.openUniversalUserModal()" class="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">person_add</span> Provision User
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-600">
+          <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="p-3 pl-4">User ID & Staff Name</th>
+              <th class="p-3">Role</th>
+              <th class="p-3">Assigned Scope / Team</th>
+              <th class="p-3">Account Status</th>
+              <th class="p-3 pr-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="superadmin-users-list" class="divide-y divide-slate-100">
+            <!-- Dynamic Users Rendered via app.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section 2: Equalized Cluster Governance Console -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">Cluster Resource Centres (CRC Governance)</h2>
+          <p class="text-xs text-slate-500">Manage clusters, assign Team Leaders, and group schools into CRC administrative units.</p>
+        </div>
+        <button onclick="document.getElementById('modal-onboard-cluster').classList.remove('hidden')" class="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">hub</span> Add Cluster
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-600">
+          <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="p-3 pl-4">Cluster Name & Code</th>
+              <th class="p-3">District & Block</th>
+              <th class="p-3">Assigned Team Leader</th>
+              <th class="p-3">Status</th>
+              <th class="p-3 pr-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="superadmin-clusters-list" class="divide-y divide-slate-100">
+            <!-- Dynamic Clusters Rendered via app.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section 3: Equalized Onboarded Projects Console -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">Onboarded Projects Console</h2>
+          <p class="text-xs text-slate-500">Manage active NGO initiatives, co-funder percentage splits, and project lifecycle status.</p>
+        </div>
+        <button onclick="document.getElementById('modal-onboard-project').classList.remove('hidden')" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">add</span> Add Project
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-600">
+          <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="p-3 pl-4">Project Name</th>
+              <th class="p-3">Co-Funding Donors & Share</th>
+              <th class="p-3">Target District</th>
+              <th class="p-3">Status</th>
+              <th class="p-3 pr-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="superadmin-projects-list" class="divide-y divide-slate-100">
+            <!-- Dynamic Projects Rendered via app.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section 4: Equalized Funder & Stakeholder Directory -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">Onboarded Funders & Stakeholder User Accounts</h2>
+          <p class="text-xs text-slate-500">Manage donor entities and provision multiple stakeholder User IDs per funder organization.</p>
+        </div>
+        <button onclick="document.getElementById('modal-onboard-funder').classList.remove('hidden')" class="px-3.5 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">handshake</span> Add Funder
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-600">
+          <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="p-3 pl-4">Funder Organization</th>
+              <th class="p-3">Primary Contact</th>
+              <th class="p-3">Provisioned Stakeholder User IDs</th>
+              <th class="p-3 pr-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="superadmin-funders-list" class="divide-y divide-slate-100">
+            <!-- Dynamic Funders Rendered via app.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal 1: Universal Multi-Role User Provisioning Modal -->
+  <div id="modal-provision-universal-user" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-md space-y-4 text-slate-900">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-bold text-base text-slate-800">Provision System Staff / User</h3>
+        <button onclick="document.getElementById('modal-provision-universal-user').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <form onsubmit="event.preventDefault(); window.saveUniversalUser(this);" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Select System Role</label>
+          <select id="user-role-select" name="role" required onchange="window.handleRoleSelectChange(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-indigo-500 font-medium">
+            <option value="school_admin">Team Leader (school_admin)</option>
+            <option value="assessor">Field Assessor (assessor)</option>
+            <option value="stakeholder">Funder / Donor (stakeholder)</option>
+            <option value="super_admin">Super Admin (super_admin)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Custom User ID / Staff ID</label>
+          <input type="text" name="userId" required placeholder="e.g. teamlead2, assessor2" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-mono outline-none focus:border-indigo-500" />
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Staff Member Full Name</label>
+          <input type="text" name="username" required placeholder="e.g. Ananya Roy" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-indigo-500" />
+        </div>
+
+        <!-- Dynamic Role-Specific Inputs -->
+        <div id="role-field-district" class="space-y-1">
+          <label class="block font-medium text-slate-600 mb-1">Assigned District Scope</label>
+          <input type="text" name="district" placeholder="e.g. Kanpur Nagar" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-indigo-500" />
+        </div>
+
+        <div id="role-field-teamlead" class="hidden space-y-1">
+          <label class="block font-medium text-slate-600 mb-1">Assign to Team Leader</label>
+          <select id="user-teamlead-select" name="teamLeaderId" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none">
+            <option value="teamlead">Ananya Roy (@teamlead)</option>
+          </select>
+        </div>
+
+        <div id="role-field-funder" class="hidden space-y-1">
+          <label class="block font-medium text-slate-600 mb-1">Assign to Funder Organization</label>
+          <select id="user-funder-select" name="funderId" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none">
+            <option value="funder_hcl">HCL Foundation</option>
+            <option value="funder_giveindia">GiveIndia</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Initial 6-Digit PIN (Super Admin Assigned)</label>
+          <input type="password" name="pin" maxLength="6" value="123456" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-mono outline-none" />
+          <p class="text-[10px] text-amber-600 mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-xs">lock</span> User will be forced to change PIN on first login.</p>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="document.getElementById('modal-provision-universal-user').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium shadow-sm">Provision Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Onboard Cluster Solid Card -->
+  <div id="modal-onboard-cluster" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-md space-y-4 text-slate-900">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-bold text-base text-slate-800">Onboard Cluster Resource Centre (CRC)</h3>
+        <button onclick="document.getElementById('modal-onboard-cluster').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <form onsubmit="event.preventDefault(); window.saveCluster(this);" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Cluster Name</label>
+          <input type="text" name="clusterName" required placeholder="e.g. Kalyanpur CRC-01" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-amber-500" />
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Cluster Code / Ref</label>
+          <input type="text" name="clusterCode" required placeholder="e.g. CRC-101" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-mono outline-none focus:border-amber-500" />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">District</label>
+            <input type="text" name="district" required placeholder="Kanpur Nagar" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
+          </div>
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">Block</label>
+            <input type="text" name="block" required placeholder="Kalyanpur" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Assigned Team Leader</label>
+          <select id="cluster-teamlead-select" name="teamLeaderId" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none">
+            <option value="teamlead">Ananya Roy (@teamlead)</option>
+          </select>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="document.getElementById('modal-onboard-cluster').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-medium shadow-sm">Save Cluster</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Onboard Funder Solid Card -->
+  <div id="modal-onboard-funder" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-md space-y-4 text-slate-900">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-bold text-base text-slate-800">Onboard New Funder / Donor</h3>
+        <button onclick="document.getElementById('modal-onboard-funder').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <form onsubmit="event.preventDefault(); window.saveFunder(this);" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Funder / Organization Name</label>
+          <input type="text" name="funderName" required placeholder="e.g. HCL Foundation, GiveIndia" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-indigo-500" />
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Contact Person Name</label>
+          <input type="text" name="contactPerson" placeholder="e.g. Anurag Sharma" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-indigo-500" />
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Contact Email</label>
+          <input type="email" name="contactEmail" placeholder="e.g. donor@hcl.org" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-indigo-500" />
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="document.getElementById('modal-onboard-funder').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium shadow-sm">Save Funder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Onboard Project Solid Card -->
+  <div id="modal-onboard-project" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-md space-y-4 text-slate-900">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-bold text-base text-slate-800">Onboard New Project</h3>
+        <button onclick="document.getElementById('modal-onboard-project').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <form onsubmit="event.preventDefault(); window.saveProject(this);" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Project Name</label>
+          <input type="text" name="projectName" required placeholder="e.g. Project Utkarsh - Kanpur Drive" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-indigo-500" />
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Target District</label>
+          <input type="text" name="targetDistrict" required placeholder="e.g. Kanpur Nagar" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-indigo-500" />
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Co-Funding Donors (% Share Split)</label>
+          <div class="space-y-2 bg-slate-50 border border-slate-200 p-2.5 rounded-xl max-h-32 overflow-y-auto" id="project-funder-shares">
+            <!-- Dynamically Populated from DB -->
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">Start Date</label>
+            <input type="date" name="startDate" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
+          </div>
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">End Date</label>
+            <input type="date" name="endDate" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
+          </div>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="document.getElementById('modal-onboard-project').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 5: Reading Passage & Benchmark Configurator -->
+  <div id="modal-manage-passages" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-lg space-y-4 text-slate-900">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-bold text-base text-slate-800">Reading Passage & Rubric Benchmark Configurator</h3>
+        <button onclick="document.getElementById('modal-manage-passages').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <form onsubmit="event.preventDefault(); window.savePassage(this);" class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">Passage Title</label>
+            <input type="text" name="title" required placeholder="e.g. Deepa aur Uska Tota" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
+          </div>
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">Language</label>
+            <select name="language" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none">
+              <option value="Hindi">Hindi (हिंदी)</option>
+              <option value="English">English</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">FLN Tier</label>
+            <select name="tier" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none">
+              <option value="1">Tier 1 - Letter / Word Level</option>
+              <option value="2">Tier 2 - Short Sentence Level</option>
+              <option value="3">Tier 3 - Story Level (Grade 2 Standard)</option>
+              <option value="4">Tier 4 - Advanced Comprehension</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-medium text-slate-600 mb-1">Target Word Count</label>
+            <input type="number" name="wordCount" value="60" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Passage Content Text</label>
+          <textarea name="content" rows="4" required placeholder="Enter full story text for literacy assessment..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none"></textarea>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="document.getElementById('modal-manage-passages').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium shadow-sm">Save Passage</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mandatory First-Time PIN Change Modal Overlay -->
+  <div id="modal-first-time-pin" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-sm space-y-4 text-slate-900 text-center">
+      <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-1">
+        <span class="material-symbols-outlined text-2xl">lock_reset</span>
+      </div>
+      <h3 class="font-bold text-lg text-slate-800">First-Time Security PIN Setup</h3>
+      <p class="text-xs text-slate-600">Your account was initialized with a temporary PIN. Please set a new 6-digit personal PIN to proceed.</p>
+      
+      <form onsubmit="event.preventDefault(); window.submitFirstTimePinChange(this);" class="space-y-3 text-xs text-left">
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">New 6-Digit PIN</label>
+          <input type="password" name="newPin" maxLength="6" required placeholder="••••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-center font-mono text-lg text-slate-800 outline-none focus:border-indigo-500" />
+        </div>
+        <div>
+          <label class="block font-medium text-slate-600 mb-1">Confirm New PIN</label>
+          <input type="password" name="confirmPin" maxLength="6" required placeholder="••••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-center font-mono text-lg text-slate-800 outline-none focus:border-indigo-500" />
+        </div>
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-lg transition-all">
+          Save New PIN & Continue
+        </button>
+      </form>
+    </div>
+  </div>
 </body>
