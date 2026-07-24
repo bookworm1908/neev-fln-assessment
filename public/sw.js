@@ -7,7 +7,7 @@ const CACHE_NAME = 'neev-fln-cache-v1';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
-    '/index.css',
+    '/style.css',
     '/js/core/db.js',
     '/js/features/speech.js',
     '/js/features/grading.js',

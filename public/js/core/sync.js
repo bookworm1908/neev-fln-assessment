@@ -72,8 +72,8 @@ export const SyncEngine = {
         for (let record of assessments) {
             try {
                 if (syncMode === 'firestore') {
-                    // Firestore REST PATCH Request
-                    const finalUrl = syncUrl ? `${syncUrl}/assessments/${record.id}` : `https://firestore.googleapis.com/v1/projects/YOUR_PROJECT_ID/databases/(default)/documents/assessments/${record.id}`;
+                    // Firestore REST PATCH Request to live neev-fln-assessor project
+                    const finalUrl = syncUrl ? `${syncUrl}/assessments/${record.id}` : `https://firestore.googleapis.com/v1/projects/neev-fln-assessor/databases/(default)/documents/assessments/${record.id}`;
                     
                     const payload = this.toFirestoreRestFormat(record);
                     const response = await fetch(finalUrl, {

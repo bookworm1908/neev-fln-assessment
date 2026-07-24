@@ -950,14 +950,9 @@ async function initApp() {
         setLanguage('en');
     }
 
-    // Seed Demo User Accounts if missing
+    // Seed Master Super Admin Account if missing (Clean Production State)
     const seedUsers = [
-        { id: "superadmin", username: "Rakesh Verma (Super Admin)", role: "super_admin" },
-        { id: "teamlead", username: "Ananya Roy (Team Leader)", role: "school_admin" },
-        { id: "assessor1", username: "Priya Sharma (Field Assessor)", role: "assessor" },
-        { id: "principal", username: "Dr. S. K. Gupta (Principal)", role: "stakeholder", scopeLevel: "school", scopeId: "sch1" },
-        { id: "district_deo", username: "Vikram Singh (DEO Kanpur)", role: "stakeholder", scopeLevel: "district", scopeId: "Kanpur" },
-        { id: "funder", username: "Global Education Fund", role: "stakeholder", scopeLevel: "program", scopeId: "global" }
+        { id: "superadmin", username: "Super Admin", role: "super_admin" }
     ];
 
     for (let u of seedUsers) {
@@ -971,11 +966,36 @@ async function initApp() {
                 pinHash: pinHash,
                 salt: salt,
                 role: u.role,
-                scopeLevel: u.scopeLevel || null,
-                scopeId: u.scopeId || null
+                status: 'active',
+                mustChangePin: false
             });
         }
     }
+
+window.resetToProductionCleanState = async function() {
+    if (!confirm("Are you sure you want to reset the database to clean production state? All local demo records, test schools, and students will be permanently cleared, leaving only the primary Super Admin profile.")) {
+        return;
+    }
+
+    const storesToClear = ['schools', 'students', 'assessments', 'projects', 'funders', 'clusters'];
+    for (let store of storesToClear) {
+        const items = await DB.getAll(store);
+        for (let item of items) {
+            await DB.delete(store, item.id);
+        }
+    }
+
+    // Purge non-superadmin users
+    const users = await DB.getAll('assessors');
+    for (let u of users) {
+        if (u.id !== 'superadmin') {
+            await DB.delete('assessors', u.id);
+        }
+    }
+
+    alert("Database successfully reset to clean production state!");
+    if (window.renderSuperAdminDashboardConsoles) window.renderSuperAdminDashboardConsoles();
+};
 
     loadRememberedProfile();
 

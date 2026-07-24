@@ -1,0 +1,144 @@
+/* ==========================================================================
+   NEEV FLN ASSESSOR - MASTER STYLESHEET (style.css)
+   ========================================================================== */
+
+/* --- 1. Fonts & Custom CSS Variables --- */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary: #30628a;
+  --on-primary: #ffffff;
+  --primary-container: #cbe6ff;
+  --on-primary-container: #001e30;
+  --secondary: #50606e;
+  --surface: #f7f9fc;
+  --surface-container-highest: #e0e3e6;
+  --outline-variant: #c2c7ce;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.25);
+}
+
+/* --- 2. Base Typography & Global Layout --- */
+body {
+  font-family: 'Noto Sans', sans-serif;
+  background-color: #FAFAFA;
+  color: #1e293b;
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Base Utility for SPA View Routing */
+.hidden {
+  display: none !important;
+}
+
+/* --- 3. Glassmorphism Panels & Cards --- */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
+}
+
+.onboarding-card {
+  border-radius: 24px;
+  border: 1px solid #E0E0E0;
+  background-color: #FAFAFA;
+  transition: all 0.3s ease;
+}
+
+.onboarding-card:hover {
+  box-shadow: 0px 4px 12px rgba(33, 33, 33, 0.04);
+  border-color: #A2D2FF;
+  transform: translateY(-2px);
+}
+
+.icon-container {
+  color: #212121;
+}
+
+.onboarding-card:hover .icon-container {
+  color: #A2D2FF;
+}
+
+.ambient-shadow-hover:hover {
+  box-shadow: 0 4px 12px rgba(33, 33, 33, 0.04);
+}
+
+/* --- 4. Assessment Word Scoring Highlights --- */
+.word-correct {
+  background-color: #d1fae5; /* emerald-100 */
+  color: #065f46; /* emerald-800 */
+  border-radius: 4px;
+  padding: 2px 4px;
+  transition: all 0.2s ease;
+}
+
+.word-error {
+  background-color: #fee2e2; /* red-100 */
+  color: #991b1b; /* red-800 */
+  text-decoration: line-through;
+  border-radius: 4px;
+  padding: 2px 4px;
+  transition: all 0.2s ease;
+}
+
+.word-skipped {
+  background-color: #fef9c3; /* yellow-100 */
+  color: #854d0e; /* yellow-800 */
+  border-bottom: 2px dashed #ca8a04;
+  border-radius: 4px;
+  padding: 2px 4px;
+  transition: all 0.2s ease;
+}
+
+/* --- 5. Micro-Animations & Responsive Keypads --- */
+.pulse-mic {
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(5, 150, 105, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+}
+
+@media (max-height: 720px) {
+  .neev-tagline {
+    display: none !important;
+  }
+  .hero-panel {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+  .logo-box {
+    margin-bottom: 0.5rem !important;
+  }
+  .logo-img {
+    height: 3.5rem !important;
+  }
+  .logo-text {
+    font-size: 2.25rem !important;
+  }
+  .login-panel {
+    padding-top: 1rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  .lang-selector-box {
+    margin-bottom: 0.75rem !important;
+    margin-top: 0.25rem !important;
+  }
+  .main-login-box {
+    gap: 0.75rem !important;
+  }
+  .keypad-footer {
+    margin-top: 0.75rem !important;
+  }
+}

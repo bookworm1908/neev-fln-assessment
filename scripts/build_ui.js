@@ -32,7 +32,7 @@ let mainHtml = `<!DOCTYPE html>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <link href="index.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" />
     
     <style>
         .view-section { display: none !important; }
