@@ -1040,15 +1040,24 @@ export { setLanguage, showView, initApp };
 
 window.saveFunder = async function(form) {
     const formData = new FormData(form);
-    const funderName = formData.get('funderName');
-    if (!funderName) return;
+    const funderName = (formData.get('funderName') || '').trim();
+    if (!funderName) {
+        alert("Please enter a valid Funder / Organization Name.");
+        return;
+    }
+
+    const contactEmail = (formData.get('contactEmail') || '').trim();
+    if (contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) {
+        alert("Please enter a valid email address for the primary contact.");
+        return;
+    }
 
     const funderId = 'funder_' + funderName.toLowerCase().replace(/[^a-z0-9]/g, '_');
     const funderObj = {
         id: funderId,
         name: funderName,
-        contactPerson: formData.get('contactPerson') || '',
-        contactEmail: formData.get('contactEmail') || '',
+        contactPerson: (formData.get('contactPerson') || '').trim(),
+        contactEmail: contactEmail,
         createdAt: new Date().toISOString()
     };
 
@@ -1069,17 +1078,31 @@ window.saveProject = async function(form) {
     const projectId = 'proj_' + projectName.toLowerCase().replace(/[^a-z0-9]/g, '_');
     const funderShareElements = form.querySelectorAll('#project-funder-shares > div');
     const funderShares = [];
+    let totalShare = 0;
 
     funderShareElements.forEach(div => {
         const checkbox = div.querySelector('input[type="checkbox"]');
         const shareInput = div.querySelector('input[type="number"]');
         if (checkbox && checkbox.checked) {
+            const share = parseInt(shareInput ? shareInput.value : '100', 10) || 0;
+            totalShare += share;
             funderShares.push({
                 funderId: checkbox.value,
-                sharePercent: parseInt(shareInput ? shareInput.value : '100', 10)
+                sharePercent: share
             });
         }
     });
+
+    const allFunders = await DB.getAll('funders');
+    if (allFunders.length > 0 && funderShares.length === 0) {
+        alert("Please select at least one co-funding donor organization for this project.");
+        return;
+    }
+
+    if (funderShares.length > 0 && totalShare !== 100) {
+        alert(`Total co-funding donor share percentage must equal 100%. Current total: ${totalShare}%`);
+        return;
+    }
 
     const projectObj = {
         id: projectId,
@@ -1096,7 +1119,7 @@ window.saveProject = async function(form) {
     await DB.put('projects', projectObj);
     await SyncEngine.syncRecord('projects', projectObj);
 
-    alert(`Project "${projectName}" onboarded successfully with percentage shares!`);
+    alert(`Project "${projectName}" onboarded successfully!`);
     document.getElementById('modal-onboard-project').classList.add('hidden');
     form.reset();
     window.renderSuperAdminDashboardConsoles();
@@ -1198,11 +1221,20 @@ window.saveUniversalUser = async function(form) {
 
 window.saveCluster = async function(form) {
     const formData = new FormData(form);
-    const clusterName = formData.get('clusterName');
-    const clusterCode = formData.get('clusterCode');
-    if (!clusterName || !clusterCode) return;
+    const clusterName = (formData.get('clusterName') || '').trim();
+    const clusterCode = (formData.get('clusterCode') || '').trim();
+    if (!clusterName || !clusterCode) {
+        alert("Please provide both Cluster Name and Cluster Code.");
+        return;
+    }
 
     const clusterId = 'cls_' + clusterCode.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const existing = await DB.get('clusters', clusterId);
+    if (existing) {
+        alert(`A cluster with Code "${clusterCode}" already exists (${existing.name}). Please use a unique Cluster Code.`);
+        return;
+    }
+
     const clusterObj = {
         id: clusterId,
         name: clusterName,
@@ -1225,11 +1257,30 @@ window.saveCluster = async function(form) {
 
 window.savePassage = async function(form) {
     const formData = new FormData(form);
-    const title = formData.get('title');
-    const content = formData.get('content');
-    if (!title || !content) return;
+    const title = (formData.get('title') || '').trim();
+    const content = (formData.get('content') || '').trim();
+    if (!title || !content) {
+        alert("Please provide both Passage Title and Content Text.");
+        return;
+    }
 
-    const passageId = 'pas_' + Date.now().toString().slice(-6);
+    const passageId = 'pas_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+    
+    const compQ = (formData.get('compQuestion') || '').trim();
+    const compOptA = (formData.get('compOptA') || '').trim();
+    const compOptB = (formData.get('compOptB') || '').trim();
+    const compOptC = (formData.get('compOptC') || '').trim();
+    const compCorrect = formData.get('compCorrect') || 'A';
+
+    let comprehensionQuestions = [];
+    if (compQ) {
+        comprehensionQuestions.push({
+            question: compQ,
+            options: { A: compOptA, B: compOptB, C: compOptC },
+            correctOption: compCorrect
+        });
+    }
+
     const passageObj = {
         id: passageId,
         title: title,
@@ -1237,6 +1288,7 @@ window.savePassage = async function(form) {
         tier: parseInt(formData.get('tier') || '3', 10),
         wordCount: parseInt(formData.get('wordCount') || '60', 10),
         content: content,
+        comprehensionQuestions: comprehensionQuestions,
         createdAt: new Date().toISOString()
     };
 
@@ -1368,7 +1420,14 @@ window.renderSuperAdminDashboardConsoles = async function() {
             const statusPill = u.status === 'deactivated' 
                 ? '<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-[10px] font-bold">Deactivated</span>'
                 : '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">Active</span>';
-            const scopeText = u.district || u.teamLeaderId ? `@${u.teamLeaderId}` : u.funderId || 'Global';
+            let scopeText = 'Global';
+            if (u.role === 'school_admin') {
+                scopeText = u.district || 'District Scope';
+            } else if (u.role === 'assessor') {
+                scopeText = u.teamLeaderId ? `@${u.teamLeaderId}` : 'Unassigned';
+            } else if (u.role === 'stakeholder') {
+                scopeText = u.funderId || 'Funder Scope';
+            }
 
             return `<tr class="hover:bg-slate-50/80 transition-colors">
                 <td class="p-3 pl-4 font-bold text-slate-800">@${u.id} <span class="font-normal text-slate-500">(${u.username})</span></td>

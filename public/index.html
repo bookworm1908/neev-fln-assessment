@@ -1435,8 +1435,7 @@
         <div id="role-field-funder" class="hidden space-y-1">
           <label class="block font-medium text-slate-600 mb-1">Assign to Funder Organization</label>
           <select id="user-funder-select" name="funderId" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none">
-            <option value="funder_hcl">HCL Foundation</option>
-            <option value="funder_giveindia">GiveIndia</option>
+            <option value="">-- Select Funder Organization --</option>
           </select>
         </div>
 
@@ -1608,7 +1607,23 @@
         </div>
         <div>
           <label class="block font-medium text-slate-600 mb-1">Passage Content Text</label>
-          <textarea name="content" rows="4" required placeholder="Enter full story text for literacy assessment..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none"></textarea>
+          <textarea name="content" rows="3" required placeholder="Enter full story text for literacy assessment..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none"></textarea>
+        </div>
+        <div class="border-t border-slate-100 pt-3 space-y-2">
+          <label class="block font-bold text-slate-700 text-xs">Optional Tier 4 Comprehension Check</label>
+          <input type="text" name="compQuestion" placeholder="Question text (e.g. Deepa ke tote ka kya naam tha?)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-slate-800 outline-none" />
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" name="compOptA" placeholder="Option A (e.g. Mithu)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-slate-800 outline-none" />
+            <input type="text" name="compOptB" placeholder="Option B (e.g. Heera)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-slate-800 outline-none" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" name="compOptC" placeholder="Option C (e.g. Moti)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-slate-800 outline-none" />
+            <select name="compCorrect" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-slate-800 outline-none">
+              <option value="A">Correct Key: Option A</option>
+              <option value="B">Correct Key: Option B</option>
+              <option value="C">Correct Key: Option C</option>
+            </select>
+          </div>
         </div>
         <div class="pt-2 flex justify-end gap-2">
           <button type="button" onclick="document.getElementById('modal-manage-passages').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-medium">Cancel</button>
