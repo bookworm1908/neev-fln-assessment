@@ -950,6 +950,13 @@ async function initApp() {
         setLanguage('en');
     }
 
+    // Hydrate local database from live Firestore cloud DB
+    try {
+        await SyncEngine.pullAllFromFirestore();
+    } catch (e) {
+        console.warn("Could not hydrate from Firestore cloud DB:", e);
+    }
+
     // Seed Master Super Admin Account if missing (Clean Production State)
     const seedUsers = [
         { id: "superadmin", username: "Super Admin", role: "super_admin" }
@@ -960,7 +967,7 @@ async function initApp() {
         if (!existing) {
             const salt = CryptoHelper.generateSalt();
             const pinHash = await CryptoHelper.hashPIN("123456", salt);
-            await DB.put('assessors', {
+            const adminObj = {
                 id: u.id,
                 username: u.username,
                 pinHash: pinHash,
@@ -968,16 +975,18 @@ async function initApp() {
                 role: u.role,
                 status: 'active',
                 mustChangePin: false
-            });
+            };
+            await DB.put('assessors', adminObj);
+            await SyncEngine.syncRecord('assessors', adminObj);
         }
     }
 
 window.resetToProductionCleanState = async function() {
-    if (!confirm("Are you sure you want to reset the database to clean production state? All local demo records, test schools, and students will be permanently cleared, leaving only the primary Super Admin profile.")) {
+    if (!confirm("Are you sure you want to reset the database to clean production state? All records in local browser memory AND live Firebase Firestore database will be permanently cleared, leaving only the primary Admin profile.")) {
         return;
     }
 
-    const storesToClear = ['schools', 'students', 'assessments', 'projects', 'funders', 'clusters'];
+    const storesToClear = ['schools', 'students', 'assessments', 'projects', 'funders', 'clusters', 'passages'];
     for (let store of storesToClear) {
         const items = await DB.getAll(store);
         for (let item of items) {
@@ -985,7 +994,7 @@ window.resetToProductionCleanState = async function() {
         }
     }
 
-    // Purge non-superadmin users
+    // Purge non-superadmin users locally
     const users = await DB.getAll('assessors');
     for (let u of users) {
         if (u.id !== 'superadmin') {
@@ -993,7 +1002,10 @@ window.resetToProductionCleanState = async function() {
         }
     }
 
-    alert("Database successfully reset to clean production state!");
+    // Purge live Firebase Firestore database
+    await SyncEngine.purgeFirestore();
+
+    alert("Database successfully reset to clean production state across local memory and live Firestore!");
     if (window.renderSuperAdminDashboardConsoles) window.renderSuperAdminDashboardConsoles();
 };
 
@@ -1032,17 +1044,21 @@ window.saveFunder = async function(form) {
     if (!funderName) return;
 
     const funderId = 'funder_' + funderName.toLowerCase().replace(/[^a-z0-9]/g, '_');
-    await DB.put('funders', {
+    const funderObj = {
         id: funderId,
         name: funderName,
         contactPerson: formData.get('contactPerson') || '',
         contactEmail: formData.get('contactEmail') || '',
         createdAt: new Date().toISOString()
-    });
+    };
+
+    await DB.put('funders', funderObj);
+    await SyncEngine.syncRecord('funders', funderObj);
 
     alert(`Funder "${funderName}" onboarded successfully!`);
     document.getElementById('modal-onboard-funder').classList.add('hidden');
     form.reset();
+    window.renderSuperAdminDashboardConsoles();
 };
 
 window.saveProject = async function(form) {
@@ -1065,7 +1081,7 @@ window.saveProject = async function(form) {
         }
     });
 
-    await DB.put('projects', {
+    const projectObj = {
         id: projectId,
         name: projectName,
         targetDistrict: formData.get('targetDistrict') || '',
@@ -1075,7 +1091,10 @@ window.saveProject = async function(form) {
         endDate: formData.get('endDate') || '',
         status: 'active',
         createdAt: new Date().toISOString()
-    });
+    };
+
+    await DB.put('projects', projectObj);
+    await SyncEngine.syncRecord('projects', projectObj);
 
     alert(`Project "${projectName}" onboarded successfully with percentage shares!`);
     document.getElementById('modal-onboard-project').classList.add('hidden');
@@ -1158,10 +1177,10 @@ window.saveUniversalUser = async function(form) {
         userObj.district = formData.get('district') || 'Kanpur Nagar';
         userObj.scopeLevel = 'district';
     } else if (role === 'assessor') {
-        userObj.teamLeaderId = formData.get('teamLeaderId') || 'teamlead';
+        userObj.teamLeaderId = formData.get('teamLeaderId') || '';
         userObj.scopeLevel = 'school';
     } else if (role === 'stakeholder') {
-        userObj.funderId = formData.get('funderId') || 'funder_hcl';
+        userObj.funderId = formData.get('funderId') || '';
         userObj.scopeId = userObj.funderId;
         userObj.scopeLevel = 'program';
     } else {
@@ -1169,6 +1188,8 @@ window.saveUniversalUser = async function(form) {
     }
 
     await DB.put('assessors', userObj);
+    await SyncEngine.syncRecord('assessors', userObj);
+
     alert(`User "@${userId}" (${role}) provisioned successfully with temporary PIN!`);
     document.getElementById('modal-provision-universal-user').classList.add('hidden');
     form.reset();
@@ -1182,16 +1203,19 @@ window.saveCluster = async function(form) {
     if (!clusterName || !clusterCode) return;
 
     const clusterId = 'cls_' + clusterCode.toLowerCase().replace(/[^a-z0-9]/g, '_');
-    await DB.put('clusters', {
+    const clusterObj = {
         id: clusterId,
         name: clusterName,
         code: clusterCode,
         district: formData.get('district') || 'Kanpur Nagar',
         block: formData.get('block') || 'Kalyanpur',
-        teamLeaderId: formData.get('teamLeaderId') || 'teamlead',
+        teamLeaderId: formData.get('teamLeaderId') || '',
         status: 'active',
         createdAt: new Date().toISOString()
-    });
+    };
+
+    await DB.put('clusters', clusterObj);
+    await SyncEngine.syncRecord('clusters', clusterObj);
 
     alert(`Cluster "${clusterName}" (${clusterCode}) onboarded successfully!`);
     document.getElementById('modal-onboard-cluster').classList.add('hidden');
@@ -1206,7 +1230,7 @@ window.savePassage = async function(form) {
     if (!title || !content) return;
 
     const passageId = 'pas_' + Date.now().toString().slice(-6);
-    await DB.put('passages', {
+    const passageObj = {
         id: passageId,
         title: title,
         language: formData.get('language') || 'Hindi',
@@ -1214,7 +1238,10 @@ window.savePassage = async function(form) {
         wordCount: parseInt(formData.get('wordCount') || '60', 10),
         content: content,
         createdAt: new Date().toISOString()
-    });
+    };
+
+    await DB.put('passages', passageObj);
+    await SyncEngine.syncRecord('passages', passageObj);
 
     alert(`Reading Passage "${title}" saved successfully!`);
     document.getElementById('modal-manage-passages').classList.add('hidden');
@@ -1237,6 +1264,7 @@ window.resetUserPIN = async function(userId) {
     user.mustChangePin = true;
 
     await DB.put('assessors', user);
+    await SyncEngine.syncRecord('assessors', user);
     alert(`PIN for @${userId} reset successfully to ${newPin}. Mandatory PIN change enabled.`);
 };
 
@@ -1247,9 +1275,10 @@ window.toggleUserActiveStatus = async function(userId) {
     const newStatus = user.status === 'deactivated' ? 'active' : 'deactivated';
     user.status = newStatus;
     await DB.put('assessors', user);
+    await SyncEngine.syncRecord('assessors', user);
 
     if (activeAssessor && activeAssessor.id === userId && newStatus === 'deactivated') {
-        alert("Your session has been deactivated by Super Admin.");
+        alert("Your session has been deactivated by Admin.");
         window.logout();
         return;
     }
@@ -1265,6 +1294,7 @@ window.toggleProjectArchive = async function(projectId) {
     const newStatus = proj.status === 'archived' ? 'active' : 'archived';
     proj.status = newStatus;
     await DB.put('projects', proj);
+    await SyncEngine.syncRecord('projects', proj);
 
     alert(`Project "${proj.name || projectId}" status updated to: ${newStatus.toUpperCase()}`);
     window.renderSuperAdminDashboardConsoles();
