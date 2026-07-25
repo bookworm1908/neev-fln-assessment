@@ -1070,12 +1070,55 @@ window.saveFunder = async function(form) {
     window.renderSuperAdminDashboardConsoles();
 };
 
+window.openProjectModal = async function() {
+    const funderSharesContainer = document.getElementById('project-funder-shares');
+    if (funderSharesContainer) {
+        const allFunders = await DB.getAll('funders');
+        if (allFunders.length === 0) {
+            funderSharesContainer.innerHTML = `<div class="p-3 bg-amber-50 border border-amber-200/60 rounded-xl text-amber-800 text-[11px] flex items-start gap-2">
+                <span class="material-symbols-outlined text-amber-600 text-base">info</span>
+                <div>
+                    <strong>No Funders Onboarded Yet</strong>
+                    <p class="text-[10px] text-amber-700 mt-0.5">Use "+ Add Funder" to onboard donor organizations, or proceed for self-funded initiatives.</p>
+                </div>
+            </div>`;
+        } else {
+            const equalShare = Math.floor(100 / allFunders.length);
+            funderSharesContainer.innerHTML = allFunders.map((f, idx) => `
+                <div class="flex items-center justify-between gap-2 p-2 bg-white rounded-xl border border-slate-200 shadow-2xs">
+                    <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-800">
+                        <input type="checkbox" value="${f.id}" checked class="rounded text-indigo-600 accent-indigo-600" />
+                        <span>${f.name}</span>
+                    </label>
+                    <div class="flex items-center gap-1">
+                        <input type="number" min="0" max="100" value="${idx === 0 ? 100 - (equalShare * (allFunders.length - 1)) : equalShare}" class="w-16 bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-center font-mono text-xs outline-none" />
+                        <span class="text-slate-500 font-bold text-xs">%</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    const modal = document.getElementById('modal-onboard-project');
+    if (modal) modal.classList.remove('hidden');
+};
+
 window.saveProject = async function(form) {
     const formData = new FormData(form);
-    const projectName = formData.get('projectName');
-    if (!projectName) return;
+    const projectName = (formData.get('projectName') || '').trim();
+    const projectCode = (formData.get('projectCode') || '').trim();
+    if (!projectName || !projectCode) {
+        alert("Please provide both Project Name and Project Code / Grant Ref.");
+        return;
+    }
 
-    const projectId = 'proj_' + projectName.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const projectId = 'proj_' + projectCode.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const existing = await DB.get('projects', projectId);
+    if (existing) {
+        alert(`A project with Code "${projectCode}" already exists (${existing.name}). Please use a unique Project Code.`);
+        return;
+    }
+
     const funderShareElements = form.querySelectorAll('#project-funder-shares > div');
     const funderShares = [];
     let totalShare = 0;
@@ -1104,10 +1147,19 @@ window.saveProject = async function(form) {
         return;
     }
 
+    const targetGrades = Array.from(form.querySelectorAll('input[name="targetGrades"]:checked')).map(cb => cb.value);
+    const subjects = Array.from(form.querySelectorAll('input[name="subjects"]:checked')).map(cb => cb.value);
+
     const projectObj = {
         id: projectId,
         name: projectName,
-        targetDistrict: formData.get('targetDistrict') || '',
+        code: projectCode,
+        targetDistrict: (formData.get('targetDistrict') || '').trim(),
+        totalBudget: parseFloat(formData.get('totalBudget') || '0') || 0,
+        targetStudents: parseInt(formData.get('targetStudents') || '0', 10) || 0,
+        targetSchools: parseInt(formData.get('targetSchools') || '0', 10) || 0,
+        targetGrades: targetGrades,
+        subjects: subjects,
         funderShares: funderShares,
         funderIds: funderShares.map(fs => fs.funderId),
         startDate: formData.get('startDate') || '',
@@ -1119,7 +1171,7 @@ window.saveProject = async function(form) {
     await DB.put('projects', projectObj);
     await SyncEngine.syncRecord('projects', projectObj);
 
-    alert(`Project "${projectName}" onboarded successfully!`);
+    alert(`Project "${projectName}" (${projectCode}) onboarded successfully!`);
     document.getElementById('modal-onboard-project').classList.add('hidden');
     form.reset();
     window.renderSuperAdminDashboardConsoles();
@@ -1461,16 +1513,30 @@ window.renderSuperAdminDashboardConsoles = async function() {
     // 3. Render Projects Console
     if (projectsTable) {
         const projects = await DB.getAll('projects');
+        const funders = await DB.getAll('funders');
+        const fundersMap = {};
+        funders.forEach(f => fundersMap[f.id] = f);
+
         projectsTable.innerHTML = projects.map(p => {
-            const sharesBadges = (p.funderShares || []).map(s => `<span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-medium">${s.funderId} (${s.sharePercent}%)</span>`).join(' ') || '<span class="text-slate-400">100%</span>';
+            const codeText = p.code ? `<span class="font-mono text-slate-400 font-normal text-[11px]">(${p.code})</span>` : '';
+            const budgetText = p.totalBudget ? `₹ ${Number(p.totalBudget).toLocaleString('en-IN')}` : 'Budget N/A';
+            const capacityText = `${p.targetStudents ? Number(p.targetStudents).toLocaleString('en-IN') : 0} Students / ${p.targetSchools || 0} Schools`;
+            
+            const sharesBadges = (p.funderShares || []).map(s => {
+                const funderObj = fundersMap[s.funderId];
+                const fName = funderObj ? funderObj.name : s.funderId;
+                return `<span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-medium text-[10px] border border-indigo-100">${fName} (${s.sharePercent}%)</span>`;
+            }).join(' ') || '<span class="text-slate-400 text-[11px] font-medium">Self-Funded</span>';
+
             const statusPill = p.status === 'archived'
                 ? '<span class="px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold">Archived</span>'
                 : '<span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">Active</span>';
 
             return `<tr class="hover:bg-slate-50/80 transition-colors">
-                <td class="p-3 pl-4 font-bold text-slate-800">${p.name}</td>
+                <td class="p-3 pl-4 font-bold text-slate-800">${p.name} ${codeText}</td>
+                <td class="p-3">${p.targetDistrict || 'N/A'} <div class="text-[10px] text-slate-400 font-mono">${budgetText}</div></td>
                 <td class="p-3">${sharesBadges}</td>
-                <td class="p-3">${p.targetDistrict || 'Kanpur Nagar'}</td>
+                <td class="p-3 font-mono text-xs text-slate-700">${capacityText}</td>
                 <td class="p-3">${statusPill}</td>
                 <td class="p-3 pr-4 text-right">
                     <button onclick="window.toggleProjectArchive('${p.id}')" class="text-slate-500 hover:text-slate-800 font-medium">${p.status === 'archived' ? 'Unarchive' : 'Archive'}</button>
