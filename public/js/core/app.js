@@ -1093,17 +1093,28 @@ window.openUniversalUserModal = async function(funderId = null) {
     
     if (teamleadSelect) {
         const allUsers = await DB.getAll('assessors');
-        const teamleads = allUsers.filter(u => u.role === 'school_admin');
-        teamleadSelect.innerHTML = teamleads.map(tl => `<option value="${tl.id}">${tl.username} (@${tl.id})</option>`).join('') || '<option value="teamlead">Ananya Roy (@teamlead)</option>';
+        const teamleads = allUsers.filter(u => u.role === 'school_admin' && u.status !== 'deactivated');
+        teamleadSelect.innerHTML = '<option value="">-- Select Team Leader --</option>' + teamleads.map(tl => `<option value="${tl.id}">${tl.username} (@${tl.id})</option>`).join('');
     }
 
     if (funderSelect) {
         const allFunders = await DB.getAll('funders');
-        funderSelect.innerHTML = allFunders.map(f => `<option value="${f.id}">${f.name}</option>`).join('') || '<option value="funder_hcl">HCL Foundation</option>';
+        funderSelect.innerHTML = '<option value="">-- Select Funder Organization --</option>' + allFunders.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
         if (funderId) funderSelect.value = funderId;
     }
 
     const modal = document.getElementById('modal-provision-universal-user');
+    if (modal) modal.classList.remove('hidden');
+};
+
+window.openClusterModal = async function() {
+    const clusterTeamleadSelect = document.getElementById('cluster-teamlead-select');
+    if (clusterTeamleadSelect) {
+        const allUsers = await DB.getAll('assessors');
+        const teamleads = allUsers.filter(u => u.role === 'school_admin' && u.status !== 'deactivated');
+        clusterTeamleadSelect.innerHTML = '<option value="">-- Select Team Leader --</option>' + teamleads.map(tl => `<option value="${tl.id}">${tl.username} (@${tl.id})</option>`).join('');
+    }
+    const modal = document.getElementById('modal-onboard-cluster');
     if (modal) modal.classList.remove('hidden');
 };
 

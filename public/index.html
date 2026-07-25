@@ -1189,7 +1189,7 @@
         <button onclick="document.getElementById('modal-onboard-project').classList.remove('hidden')" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs shadow-md transition-all flex items-center gap-1.5 active:scale-95">
           <span class="material-symbols-outlined text-sm">folder_open</span> + Add Project
         </button>
-        <button onclick="document.getElementById('modal-onboard-cluster').classList.remove('hidden')" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs shadow-md transition-all flex items-center gap-1.5 active:scale-95">
+        <button onclick="window.openClusterModal()" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs shadow-md transition-all flex items-center gap-1.5 active:scale-95">
           <span class="material-symbols-outlined text-sm">hub</span> + Add Cluster
         </button>
         <button onclick="window.openUniversalUserModal()" class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-medium text-xs shadow-md transition-all flex items-center gap-1.5 active:scale-95">
@@ -1270,7 +1270,7 @@
           <h2 class="text-lg font-bold text-slate-800">Cluster Resource Centres (CRC Governance)</h2>
           <p class="text-xs text-slate-500">Manage clusters, assign Team Leaders, and group schools into CRC administrative units.</p>
         </div>
-        <button onclick="document.getElementById('modal-onboard-cluster').classList.remove('hidden')" class="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
+        <button onclick="window.openClusterModal()" class="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
           <span class="material-symbols-outlined text-sm">hub</span> + Add Cluster
         </button>
       </div>
@@ -1428,7 +1428,7 @@
         <div id="role-field-teamlead" class="hidden space-y-1">
           <label class="block font-medium text-slate-600 mb-1">Assign to Team Leader</label>
           <select id="user-teamlead-select" name="teamLeaderId" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none">
-            <option value="teamlead">Ananya Roy (@teamlead)</option>
+            <option value="">-- Select Team Leader --</option>
           </select>
         </div>
 
@@ -1485,7 +1485,7 @@
         <div>
           <label class="block font-medium text-slate-600 mb-1">Assigned Team Leader</label>
           <select id="cluster-teamlead-select" name="teamLeaderId" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none">
-            <option value="teamlead">Ananya Roy (@teamlead)</option>
+            <option value="">-- Select Team Leader --</option>
           </select>
         </div>
         <div class="pt-2 flex justify-end gap-2">
