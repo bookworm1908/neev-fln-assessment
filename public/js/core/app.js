@@ -1317,7 +1317,7 @@ window.renderSuperAdminDashboardConsoles = async function() {
     if (usersTable) {
         const users = await DB.getAll('assessors');
         const roleBadges = {
-            super_admin: '<span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 border border-indigo-200 text-[10px] font-bold">Super Admin</span>',
+            super_admin: '<span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 border border-indigo-200 text-[10px] font-bold">Admin</span>',
             school_admin: '<span class="px-2 py-0.5 rounded bg-teal-100 text-teal-800 border border-teal-200 text-[10px] font-bold">Team Leader</span>',
             assessor: '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold">Field Assessor</span>',
             stakeholder: '<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200 text-[10px] font-bold">Stakeholder</span>'
