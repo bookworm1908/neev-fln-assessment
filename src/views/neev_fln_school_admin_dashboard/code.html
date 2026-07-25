@@ -113,14 +113,14 @@
 
   <!-- Modal 3: Onboard School Solid Card -->
   <div id="modal-onboard-school" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-md space-y-4 text-slate-900">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-md max-h-[85vh] overflow-hidden flex flex-col text-slate-900">
+      <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
         <h3 class="font-bold text-base text-slate-800">Onboard New School / Center</h3>
-        <button onclick="document.getElementById('modal-onboard-school').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
-          <span class="material-symbols-outlined">close</span>
+        <button onclick="document.getElementById('modal-onboard-school').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 p-1">
+          <span class="material-symbols-outlined text-xl">close</span>
         </button>
       </div>
-      <form onsubmit="event.preventDefault(); window.saveSchool(this);" class="space-y-3 text-xs">
+      <form onsubmit="event.preventDefault(); window.saveSchool(this);" class="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-5 space-y-3 text-xs">
         <div>
           <label class="block font-medium text-slate-600 mb-1">School / Center Name</label>
           <input type="text" name="schoolName" required placeholder="e.g. Govt. Primary School Kalyanpur" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-teal-500" />
@@ -142,7 +142,7 @@
             <input type="text" name="block" placeholder="e.g. Kalyanpur" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none" />
           </div>
         </div>
-        <div class="pt-2 flex justify-end gap-2">
+        <div class="pt-2 flex justify-end gap-2 border-t border-slate-100 mt-4">
           <button type="button" onclick="document.getElementById('modal-onboard-school').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-medium">Cancel</button>
           <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium shadow-sm">Save School</button>
         </div>
@@ -152,14 +152,14 @@
 
   <!-- Modal 4: Onboard Student Solid Card (Extended with DOB & Mother Tongue) -->
   <div id="modal-onboard-student" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl w-full max-w-md space-y-4 text-slate-900">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-md max-h-[85vh] overflow-hidden flex flex-col text-slate-900">
+      <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
         <h3 class="font-bold text-base text-slate-800">Onboard New Student</h3>
-        <button onclick="document.getElementById('modal-onboard-student').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
-          <span class="material-symbols-outlined">close</span>
+        <button onclick="document.getElementById('modal-onboard-student').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 p-1">
+          <span class="material-symbols-outlined text-xl">close</span>
         </button>
       </div>
-      <form onsubmit="event.preventDefault(); window.saveStudent(this);" class="space-y-3 text-xs">
+      <form onsubmit="event.preventDefault(); window.saveStudent(this);" class="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-5 space-y-3 text-xs">
         <div>
           <label class="block font-medium text-slate-600 mb-1">Student Full Name</label>
           <input type="text" name="studentName" required placeholder="e.g. Rohan Sharma" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 outline-none focus:border-teal-500" />
@@ -203,7 +203,7 @@
             <option value="">Unallocated (General Pool)</option>
           </select>
         </div>
-        <div class="pt-2 flex justify-end gap-2">
+        <div class="pt-2 flex justify-end gap-2 border-t border-slate-100 mt-4">
           <button type="button" onclick="document.getElementById('modal-onboard-student').classList.add('hidden')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-medium">Cancel</button>
           <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium shadow-sm">Save Student</button>
         </div>
