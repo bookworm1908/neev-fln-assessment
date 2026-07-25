@@ -1201,95 +1201,7 @@
       </div>
     </div>
 
-    <!-- 3 Admin Operations Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      
-      <!-- Card 1: Multi-Role Staff Provisioning -->
-      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="font-bold text-slate-800 text-base">User Account Provisioning</h3>
-            <span class="w-8 h-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
-              <span class="material-symbols-outlined text-lg">manage_accounts</span>
-            </span>
-          </div>
-          <p class="text-xs text-slate-500 mb-3">Provision User IDs, assign initial PINs, set mandatory first-login PIN changes, and assign district/team scopes.</p>
-        </div>
-        <button onclick="window.openUniversalUserModal()" class="mt-4 w-full py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-medium text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5">
-          <span class="material-symbols-outlined text-sm">person_add</span> Provision New User / Staff
-        </button>
-      </div>
-
-      <!-- Card 2: Master CSV & PDF Reports Exporter -->
-      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="font-bold text-slate-800 text-base">Master Data Exporter</h3>
-            <span class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <span class="material-symbols-outlined text-lg">download</span>
-            </span>
-          </div>
-          <p class="text-xs text-slate-500 mb-3">Export raw assessment logs, school performance summaries, and cluster compliance audits.</p>
-          <div class="space-y-2">
-            <button onclick="window.exportAssessmentLogsCSV()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-xl transition-colors flex items-center justify-center gap-2">
-              <span class="material-symbols-outlined text-sm">csv</span> Export Assessment Logs (CSV)
-            </button>
-            <button onclick="window.exportSchoolSummariesCSV()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-xl transition-colors flex items-center justify-center gap-2">
-              <span class="material-symbols-outlined text-sm">table_chart</span> Export School Summaries (Excel)
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3: Master Passage & Rubric Config -->
-      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="font-bold text-slate-800 text-base">Passage & Rubric Config</h3>
-            <span class="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center">
-              <span class="material-symbols-outlined text-lg">description</span>
-            </span>
-          </div>
-          <p class="text-xs text-slate-500 mb-3">Add or edit Tier 1–4 literacy reading passages, word counts, and math benchmarks.</p>
-          <button onclick="document.getElementById('modal-manage-passages').classList.remove('hidden')" class="w-full py-2 bg-teal-500 hover:bg-teal-600 text-white font-medium text-xs rounded-xl transition-colors shadow-sm">
-            Manage Reading Passages
-          </button>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Section 1: Equalized System Users & Staff Directory Console -->
-    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
-        <div>
-          <h2 class="text-lg font-bold text-slate-800">System Users & Staff Directory</h2>
-          <p class="text-xs text-slate-500">Manage all system accounts (`super_admin`, `school_admin`, `assessor`, `stakeholder`), reset PINs, and toggle active status.</p>
-        </div>
-        <button onclick="window.openUniversalUserModal()" class="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
-          <span class="material-symbols-outlined text-sm">person_add</span> Provision User
-        </button>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs text-slate-600">
-          <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
-            <tr>
-              <th class="p-3 pl-4">User ID & Staff Name</th>
-              <th class="p-3">Role</th>
-              <th class="p-3">Assigned Scope / Team</th>
-              <th class="p-3">Account Status</th>
-              <th class="p-3 pr-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="superadmin-users-list" class="divide-y divide-slate-100">
-            <!-- Dynamic Users Rendered via app.js -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Section 2: Equalized Cluster Governance Console -->
+    <!-- Section 1: Equalized Cluster Governance Console -->
     <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
         <div>
@@ -1319,7 +1231,7 @@
       </div>
     </div>
 
-    <!-- Section 3: Equalized Onboarded Projects Console -->
+    <!-- Section 2: Equalized Onboarded Projects Console -->
     <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
         <div>
@@ -1349,7 +1261,7 @@
       </div>
     </div>
 
-    <!-- Section 4: Equalized Funder & Stakeholder Directory -->
+    <!-- Section 3: Equalized Funder & Stakeholder Directory -->
     <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
         <div>
@@ -1375,6 +1287,103 @@
             <!-- Dynamic Funders Rendered via app.js -->
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Section 4: Equalized System Users & Staff Directory Console -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">System Users & Staff Directory</h2>
+          <p class="text-xs text-slate-500">Manage all system accounts (`super_admin`, `school_admin`, `assessor`, `stakeholder`), reset PINs, and toggle active status.</p>
+        </div>
+        <button onclick="window.openUniversalUserModal()" class="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">person_add</span> Provision User
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-600">
+          <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+            <tr>
+              <th class="p-3 pl-4">User ID & Staff Name</th>
+              <th class="p-3">Role</th>
+              <th class="p-3">Assigned Scope / Team</th>
+              <th class="p-3">Account Status</th>
+              <th class="p-3 pr-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="superadmin-users-list" class="divide-y divide-slate-100">
+            <!-- Dynamic Users Rendered via app.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section 5: Equalized Passage & Rubric Config Console -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">Passage & Rubric Config</h2>
+          <p class="text-xs text-slate-500">Configure Tier 1–4 literacy reading passages, target word counts, and foundational math benchmarks.</p>
+        </div>
+        <button onclick="document.getElementById('modal-manage-passages').classList.remove('hidden')" class="px-3.5 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">description</span> Configure Passages
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+          <div class="flex items-center gap-2 text-teal-700 font-bold">
+            <span class="material-symbols-outlined text-base">menu_book</span> Tier 1 & 2 Word Lists
+          </div>
+          <p class="text-slate-500">Letter identification, word recognition, and 30-word speed benchmarks.</p>
+        </div>
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+          <div class="flex items-center gap-2 text-teal-700 font-bold">
+            <span class="material-symbols-outlined text-base">auto_stories</span> Tier 3 Reading Paragraphs
+          </div>
+          <p class="text-slate-500">60-word Hindi & English contextual paragraphs with fluently timed scoring.</p>
+        </div>
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+          <div class="flex items-center gap-2 text-teal-700 font-bold">
+            <span class="material-symbols-outlined text-base">quiz</span> Tier 4 Comprehension Questions
+          </div>
+          <p class="text-slate-500">Reading comprehension checks and NIPUN FLN grade-level alignment.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 6: Equalized Master Data Exporter Console -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">Master Data Exporter</h2>
+          <p class="text-xs text-slate-500">Export raw assessment logs, school performance summaries, and cluster compliance audits in standard CSV/Excel formats.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="window.exportAssessmentLogsCSV()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">download</span> Export Assessment Logs (CSV)
+          </button>
+          <button onclick="window.exportSchoolSummariesCSV()" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">table_chart</span> Export School Summaries (Excel)
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1.5">
+          <h4 class="font-bold text-slate-800 flex items-center gap-2">
+            <span class="material-symbols-outlined text-emerald-600 text-base">description</span> Raw Assessment Telemetry Log
+          </h4>
+          <p class="text-slate-500">Includes student IDs, WCPM speeds, accuracy %, passage tier level, academic year, timestamp, and assessor ID.</p>
+        </div>
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1.5">
+          <h4 class="font-bold text-slate-800 flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-600 text-base">school</span> School & Cluster Performance Summary
+          </h4>
+          <p class="text-slate-500">Includes school names, cluster codes, district, block, assigned Team Leader ID, and total enrolled students.</p>
+        </div>
       </div>
     </div>
   </main>
